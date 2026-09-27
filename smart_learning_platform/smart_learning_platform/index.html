@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:;">
+  <title>منصة زُبدة الأكاديمية • كلية الذكاء الاصطناعي (Level 2) - جامعة الدلتا</title>
+
+  <!-- Google Fonts: IBM Plex Sans Arabic + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN with darkMode config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"IBM Plex Sans Arabic"', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            slate: {
+              850: '#172033',
+              900: '#0F172A',
+              950: '#0B1120',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18, ReactDOM, Babel & Confetti CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      font-family: 'IBM Plex Sans Arabic', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94A3B8;
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="selection:bg-emerald-600 selection:text-white antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+
+    const deltaCourses = [
+  {
+    "id": "or",
+    "code": "OR-301",
+    "title": "بحوث العمليات (Operations Research)",
+    "folderName": "Operations Research",
+    "subtitle": "صياغة نماذج البرمجة الخطية، خوارزمية السيمبلكس، ونظرية تخصيص الموارد المثلى",
+    "instructor": "قسم بحوث العمليات والرياضيات التطبيقية",
+    "icon": "📊",
+    "readiness": 90,
+    "files": [
+      {
+        "title": "المحاضرة 1: مقدمة وصياغة البرمجة الخطية (LP Formulation)",
+        "filename": "lecture_1_intro.pptx",
+        "path": "./materials/or/lecture_1_intro.pptx",
+        "type": "PPTX",
+        "size": "0.28 MB"
+      },
+      {
+        "title": "السكشن 1: صياغة المسائل ومحددات الموارد والإنتاج",
+        "filename": "section_1_formulation.pptx",
+        "path": "./materials/or/section_1_formulation.pptx",
+        "type": "PPTX",
+        "size": "0.11 MB"
+      }
+    ],
+    "activeChapter": "الفصل 1 والشيت 1: LP Formulation, Graphical Method & Simplex Foundations",
+    "status": "مكتمل وشامل",
+    "onlineCourses": [
+      {
+        "title": "كورس بحوث العمليات التطبيقية (Operations Research)",
+        "instructor": "د. ناجي شكري الزعزاع (Dr. Naji Shukri)",
+        "platform": "YouTube",
+        "language": "عربي 🇸🇦",
+        "level": "مبتدئ إلى متقدم",
+        "duration": "سلسلة جامعية شاملة",
+        "link": "https://www.youtube.com/results?search_query=دكتور+ناجي+شكري+بحوث+العمليات",
+        "desc": "أقوى شرح جامعي باللغة العربية يغطي صياغة المسائل، الحل البياني، خوارزمية السيمبلكس، والنقل والتخصيص."
+      },
+      {
+        "title": "Operations Research (1): Models and Applications",
+        "instructor": "National Taiwan University (Prof. Ling-Chieh Kung)",
+        "platform": "Coursera (مجاني Audit)",
+        "language": "إنجليزي 🇬🇧",
+        "level": "جامعي معتمد",
+        "duration": "7 أسابيع",
+        "link": "https://www.coursera.org/learn/operations-research-modeling",
+        "desc": "كورس رسمي ممتاز يركز على صياغة المشاكل المعقدة في صورة نماذج برمجية خطية وطرق حلها."
+      },
+      {
+        "title": "Operations Research Complete Course in 10 Hours",
+        "instructor": "Parth Shah Optimization",
+        "platform": "YouTube",
+        "language": "إنجليزي 🇬🇧",
+        "level": "مكثف سريع",
+        "duration": "10 ساعات",
+        "link": "https://www.youtube.com/results?search_query=Parth+Shah+Operations+Research+in+10+hours",
+        "desc": "مراجعة مكثفة سريعة لجميع مفاهيم المادة ليلة الامتحان: Simplex, Transportation, Assignment."
+      },
+      {
+        "title": "MIT 15.053: Optimization Methods in Management Science",
+        "instructor": "MIT OpenCourseWare (Prof. James Orlin)",
+        "platform": "MIT OCW",
+        "language": "إنجليزي 🇬🇧",
+        "level": "متقدم عالمي",
+        "duration": "فصل دراسي كامل",
+        "link": "https://ocw.mit.edu/courses/15-053-optimization-methods-in-management-science-spring-2013/",
+        "desc": "المنهج الأقوى من جامعة MIT في خوارزميات التحسين ونظرية البرمجة الخطية والأعداد الصحيحة (ILP)."
+      },
+      {
+        "title": "Operations Research Series by Dr. Gajendra Purohit",
+        "instructor": "Dr. Gajendra Purohit (Higher Math)",
+        "platform": "YouTube",
+        "language": "إنجليزي 🇬🇧",
+        "level": "حل مسائل وامتحانات",
+        "duration": "أكثر من 35 درساً",
+        "link": "https://www.youtube.com/results?search_query=Gajendra+Purohit+Operations+Research+Simplex",
+        "desc": "شرح عملي يركز على حل جداول السيمبلكس الحسابية خطوة بخطوة وتجنب الأخطاء الشائعة في الاختبارات."
+      }
+    ],
+    "summaryPoints": [
+      {
+        "title": "1. متغيرات القرار (Decision Variables)",
+        "desc": "المجاهيل (X₁, X₂) التي يسعى النموذج لحساب قيمتها المثلى لتحقيق الهدف دون تجاوز المتاح من الموارد."
+      },
+      {
+        "title": "2. دالة الهدف (Objective Function)",
+        "desc": "المقصد الرياضي الأساسي: إما تعظيم أرباح (Maximize Z) أو تدنية تكاليف وأوقات تشغيل (Minimize Z)."
+      },
+      {
+        "title": "3. القيود الهيكلية (Structural Constraints)",
+        "desc": "حدود الموارد المتاحة (ساعات الماكينات، المواد الخام، العمالة) في صورة متباينات خطية (≤ أو ≥)."
+      },
+      {
+        "title": "4. قيد عدم السلبية (Non-Negativity Constraint)",
+        "desc": "شرط إجباري حتمي (X₁, X₂ ≥ 0)؛ لأنه يستحيل إنتاج أو بيع كميات بالسالب في الواقع."
+      },
+      {
+        "title": "5. خوارزمية السيمبلكس (Simplex Algorithm)",
+        "desc": "طريقة جبرية تكرارية تنتقل بين النقاط الركنية (Corner Points) للوصول للحل الأمثل في أسرع وقت."
+      }
+    ],
+    "deepExplanations": [
+      {
+        "title": "الخطوات القياسية لصياغة مسألة البرمجة الخطية (LP Formulation):",
+        "content": "1. تعريف متغيرات القرار بوضوح: لنفرض أن X₁ = عدد وحدات المنتج A، و X₂ = عدد وحدات المنتج B.\n2. بناء دالة الهدف: Max Z = (ربح A) * X₁ + (ربح B) * X₂.\n3. تحديد قيود الموارد: كمية استهلاك الماكينة 1: a₁X₁ + a₂X₂ ≤ الساعات المتاحة.\n4. كتابة قيد عدم السلبية: X₁, X₂ ≥ 0 (عدم كتابته يخصم درجات فوراً في الامتحانات!)."
+      },
+      {
+        "title": "طريقة الحل البياني (Graphical Method) وتحديد منطقة الحل الممكن:",
+        "content": "• تُستخدم عندما يكون لدينا متغيران فقط (X₁, X₂).\n• نحول كل متباينة إلى خط مستقيم عبر فرض X₁=0 لإيجاد X₂، ثم فرض X₂=0 لإيجاد X₁.\n• نحدد منطقة الحل الممكن (Feasible Region) المشتركة بين جميع القيود.\n• نظرية الحل الأمثل: الحل الأقصى يقع دائماً عند إحدى النقاط الركنية (Extreme Corner Points).\n• نعوض بكل نقطة ركنية في دالة الهدف لنختار القيمة الأعلى (في حالة Max) أو الأقل (في حالة Min)."
+      },
+      {
+        "title": "قواعد جدول السيمبلكس (Simplex Tableau Steps):",
+        "content": "1. تحويل المتباينات (≤) إلى معادلات بإضافة متغيرات راكدة موجبة (Slack Variables: S₁, S₂ ≥ 0).\n2. صف دالة الهدف (Z-row): ننقل المتغيرات بجانب Z ليصبح: Z - c₁X₁ - c₂X₂ = 0.\n3. اختيار عمود المحور (Pivot Column): المتغير صاحب القيمة الأكثر سلبية في صف Z (يدخل الأساس).\n4. اختيار صف المحور (Pivot Row): أصغر نسبة موجبة من قسمة الثوابت RHS على عناصر عمود المحور المقابلة (يخرج من الأساس).\n5. تطبيق العمليات الصفية حتى تختفي جميع الأعداد السالبة من صف Z."
+      },
+      {
+        "title": "الحالات الخاصة في البرمجة الخطية (Special LP Cases):",
+        "content": "• حل غير محدود (Unbounded Solution): عندما تتزايد دالة الهدف للما لا نهاية لعدم وجود قيد يغلق المنطقة.\n• حل غير ممكن (Infeasible Solution): لا توجد منطقة مشتركة تحقق جميع القيود في آن واحد.\n• حلول مثلى بديلة (Alternative/Multiple Optima): عندما يوازي خط دالة الهدف أحد خطوط القيود، فيصبح الخط بالكامل حلاً أمثلاً."
+      }
+    ],
+    "examTraps": [
+      "فخ توحيد الوحدات: إذا أعطاك زمن تشغيل الماكينة بالدقائق (مثلاً 30 دقيقة للقطعة) والسعة الإجمالية بالساعات (35 ساعة)، يجب تحويل الساعات لدقائق (35 × 60 = 2100 دقيقة) قبل كتابة المتباينة.",
+      "فخ قيد عدم السلبية: نسيان كتابة X₁, X₂ ≥ 0 في نهاية الصياغة يكلفك من درجتين إلى ثلاث درجات في الفاينل.",
+      "فخ نسبة السيمبلكس: عند قسمة RHS على عناصر عمود المحور، نأخذ القيم الموجبة فقط (>0) ونتجاهل الأصفار والقيم السالبة تماماً!",
+      "فخ كلمة 'على الأقل' مقابل 'على الأكثر': 'At least' تعني (≥)، بينما 'At most' أو 'Limited to' تعني (≤).",
+      "فخ دالة الهدف Minimization: عند تدنية التكاليف، الحل الأمثل في السيمبلكس ينتهي عندما تصبح جميع معاملات صف Z موجبة أو صفراً."
+    ],
+    "quizQuestions": [
+      {
+        "id": 1,
+        "question": "مصنع ينتج نوعين من الأجهزة (A و B). إذا كان زمن إنتاج الوحدة من A هو 30 دقيقة، وزمن B هو 45 دقيقة، وإجمالي الساعات المتاحة أسبوعياً هو 40 ساعة. ما هو القيد الزمني الصحيح؟",
+        "options": [
+          "30 X₁ + 45 X₂ ≤ 40",
+          "30 X₁ + 45 X₂ ≤ 2400",
+          "0.5 X₁ + 0.75 X₂ ≥ 2400",
+          "30 X₁ + 45 X₂ = 40"
+        ],
+        "correctIndex": 1,
+        "explanation": "يجب توحيد الوحدات: 40 ساعة × 60 دقيقة = 2400 دقيقة، وبالتالي المتباينة الصحيحة بالدقائق هي 30X₁ + 45X₂ ≤ 2400."
+      },
+      {
+        "id": 2,
+        "question": "ما هو الركن الإجباري في أي نموذج برمجة خطية الذي يعبر عن استحالة إنتاج كميات سالبة في الحياة الواقعية؟",
+        "options": [
+          "دالة الهدف (Objective Function)",
+          "متغيرات القرار (Decision Variables)",
+          "قيد عدم السلبية (Non-Negativity Constraint: X₁, X₂ ≥ 0)",
+          "منطقة الحل غير المحدود"
+        ],
+        "correctIndex": 2,
+        "explanation": "قيد عدم السلبية (Non-negativity) شرط رياضي ومنطقي إلزامي لضمان واقعية النموذج في الإنتاج والتكاليف."
+      },
+      {
+        "id": 3,
+        "question": "في خوارزمية السيمبلكس لمسألة تعظيم أرباح (Maximize Z)، كيف يتم تحديد 'المتغير الداخل' (Entering Variable) للأساس؟",
+        "options": [
+          "أكبر قيمة موجبة في عمود الثوابت (RHS)",
+          "أكبر قيمة سلبية (Most Negative) في صف دالة الهدف Z",
+          "أصغر معامل في صف القيود",
+          "أي متغير يتم اختياره عشوائياً"
+        ],
+        "correctIndex": 1,
+        "explanation": "المتغير الداخل هو صاحب أكبر معامل سلبي في صف Z، لأنه يقدم أعلى معدل ربح إضافي لكل وحدة منتجة."
+      },
+      {
+        "id": 4,
+        "question": "متى نتوقف عن إجراء التكرارات (Iterations) ونعلن التوصل للحل الأمثل في جدول السيمبلكس لمسألة تعظيم (Max Z)؟",
+        "options": [
+          "عندما تصبح جميع عناصر صف Z موجبة أو أصفاراً (Non-negative)",
+          "عندما يصبح عمود الثوابت صفراً",
+          "بعد إنجاز 3 تكرارات بالضبط",
+          "عندما تصبح دالة الهدف سالبة"
+        ],
+        "correctIndex": 0,
+        "explanation": "شرط الأمثلية (Optimality Condition) في مسائل Max Z هو اختفاء جميع القيم السالبة من صف Z."
+      },
+      {
+        "id": 5,
+        "question": "في طريقة الحل البياني، إذا كان خط دالة الهدف موازياً تماماً لأحد خطوط القيود الفعالة، فإن المسألة تمتلك:",
+        "options": [
+          "حلاً وحيداً فقط",
+          "حلولاً مثلى بديلة لا نهائية (Alternative Optimal Solutions)",
+          "حلاً غير ممكن (Infeasible)",
+          "حلاً غير محدود"
+        ],
+        "correctIndex": 1,
+        "explanation": "عند توازي ميل دالة الهدف مع قيد فعال، تكون كل النقاط الواقعة على القطعة المستقيمة بين النقطتين الركنيتين حلولاً مثلى تعطي نفس الربح."
+      },
+      {
+        "id": 6,
+        "question": "متجر ملابس لديه سعة تخزينية تتسع لـ 500 قميص على الأكثر. الصياغة الرياضية الدقيقة لهذا القيد هي:",
+        "options": [
+          "X₁ + X₂ ≥ 500",
+          "X₁ + X₂ ≤ 500",
+          "X₁ + X₂ = 500",
+          "X₁ × X₂ ≤ 500"
+        ],
+        "correctIndex": 1,
+        "explanation": "كلمة 'على الأكثر' أو 'Limited to' تعني أن الكمية المخزنة لا يمكن أن تتجاوز 500، لذا نستخدم متباينة الأصغر من أو يساوي (≤)."
+      },
+      {
+        "id": 7,
+        "question": "ما هو دور المتغير الراكد (Slack Variable: S₁) المضاف إلى قيود المتباينات من النوع (≤) في السيمبلكس؟",
+        "options": [
+          "تحويل المتباينة لمعادلة ويمثل الموارد غير المستغلة (Unused Resource)",
+          "مضاعفة أرباح دالة الهدف",
+          "حذف المتغيرات السالبة",
+          "تقليل عدد المعادلات"
+        ],
+        "correctIndex": 0,
+        "explanation": "المتغير الراكد Slack Variable يحول (≤) إلى (=) ويعبر فيزيائياً عن كمية المورد المتبقي دون استخدام."
+      },
+      {
+        "id": 8,
+        "question": "عند اختبار النسبة الصغرى (Minimum Ratio Test) لتحديد المتغير الخارج في السيمبلكس، يتم قسمة عناصر RHS على:",
+        "options": [
+          "عناصر عمود المحور الموجبة فقط (> 0)",
+          "جميع عناصر عمود المحور بما فيها السالبة",
+          "عناصر صف Z",
+          "أكبر عنصر في الجدول"
+        ],
+        "correctIndex": 0,
+        "explanation": "نقسم فقط على العناصر الموجبة تماماً في عمود المحور؛ لأن القسمة على الصفر مستحيلة والقيم السالبة تعطي نسباً مضللة تخرجنا من منطقة الحل الممكن."
+      }
+    ],
+    "flashcards": [
+      {
+        "front": "Operations Research (OR)",
+        "back": "النهج العلمي والرياضي لاتخاذ القرارات المثلى في ظل محدودية وندرة الموارد المتاحة.",
+        "tag": "مفهوم رئيسي"
+      },
+      {
+        "front": "Decision Variables (متغيرات القرار)",
+        "back": "المجاهيل (X₁, X₂) المطلوب تحديد قيمتها للوصول إلى الغاية المنشودة بأعلى كفاءة.",
+        "tag": "مكونات LP"
+      },
+      {
+        "front": "Objective Function (دالة الهدف)",
+        "back": "المعادلة الرياضية المعبرة عن الهدف: إما تعظيم أرباح (Maximize) أو تدنية تكاليف وأزمنة (Minimize).",
+        "tag": "مكونات LP"
+      },
+      {
+        "front": "Non-negativity Restriction (قيد عدم السلبية)",
+        "back": "X₁, X₂ ≥ 0؛ شرط منطقي حتمي لاستحالة تصنيع أو بيع كميات سالبة في الواقع الصناعي.",
+        "tag": "قواعد الامتحان"
+      },
+      {
+        "front": "Feasible Region (منطقة الحل الممكن)",
+        "back": "المساحة الهندسية المشتركة التي تحقق جميع قيود المسألة وقيد عدم السلبية في آن واحد.",
+        "tag": "الحل البياني"
+      },
+      {
+        "front": "Pivot Column (عمود المحور)",
+        "back": "العمود الذي يحدد المتغير الداخل، وهو صاحب أعلى قيمة سالبة في صف دالة الهدف Z.",
+        "tag": "خوارزمية السيمبلكس"
+      },
+      {
+        "front": "Pivot Row (صف المحور)",
+        "back": "الصف الذي يحدد المتغير الخارج، ويتم اختياره بناءً على أصغر نسبة موجبة ناتجة عن قسمة (RHS / Pivot Column).",
+        "tag": "خوارزمية السيمبلكس"
+      },
+      {
+        "front": "Slack Variable (المتغير الراكد)",
+        "back": "متغير موجب يُضاف للمتباينات من نوع (≤) لتحويلها لمعادلات، ويمثل المتبقي غير المستغل من المورد.",
+        "tag": "نماذج السيمبلكس"
+      }
+    ]
+  },
+  {
+    "id": "networks",
+    "code": "CSC214",
+    "title": "شبكات الحاسب ونقل البيانات (Computer Networks)",
+    "folderName": "Computer Networks and Data Communication",
+    "subtitle": "أساسيات نقل البيانات، المكونات الخمسة، اتجاهات التدفق، طوبولوجيا الشبكات، ونموذج OSI",
+    "instructor": "قسم هندسة الحاسبات ونظم الاتصالات",
+    "icon": "🌐",
+    "readiness": 88,
+    "files": [
+      {
+        "title": "المحاضرة 1: أساسيات ومعمارية الشبكات وطبقات OSI",
+        "filename": "networks_lec_1.pdf",
+        "path": "./materials/networks/networks_lec_1.pdf",
+        "type": "PDF",
+        "size": "1.87 MB"
+      },
+      {
+        "title": "الشيت 1: مسائل وتطبيقات الشبكات وحسابات التأخير",
+        "filename": "networks_sheet_1.pdf",
+        "path": "./materials/networks/networks_sheet_1.pdf",
+        "type": "PDF",
+        "size": "0.15 MB"
+      }
+    ],
+    "activeChapter": "المحاضرة 1 والشيت 1: Five Components, Transmission Modes & Network Topologies",
+    "status": "مكتمل وشامل",
+    "onlineCourses": [
+      {
+        "title": "Computer Networks Full Academic Course",
+        "instructor": "Neso Academy (المرجع الهندسي الأول)",
+        "platform": "YouTube (Neso Academy)",
+        "language": "إنجليزي 🇬🇧",
+        "level": "من البداية للاحتراف",
+        "duration": "80+ درساً بصریاً",
+        "link": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRgMCUAG0XRw78UA8qnv6jEx",
+        "desc": "أشهر دورة شبكات هندسية في العالم لشرح نموذج OSI، الطوبولوجيات، وحساب كابلات ومنافذ الشبكات."
+      },
+      {
+        "title": "كورس شبكات الحاسب باللغة العربية (Computer Networks)",
+        "instructor": "Mohammad Bsoul (قناة اتحاد IT)",
+        "platform": "YouTube",
+        "language": "عربي 🇸🇦",
+        "level": "جامعي مبسط",
+        "duration": "سلسلة فصول المنهج",
+        "link": "https://www.youtube.com/results?search_query=Mohammad+Bsoul+Computer+Networks+Arabic",
+        "desc": "شرح عربي أكاديمي متميز يغطي كل محتويات منهج الكلية مع حلول للمسائل والشيتات."
+      },
+      {
+        "title": "Computer Networking Lectures - Kurose & Ross Authors",
+        "instructor": "Prof. Jim Kurose (مؤلف الكتاب المعتمد عالمياً)",
+        "platform": "YouTube / UMass",
+        "language": "إنجليزي 🇬🇧",
+        "level": "مرجعي معتمد",
+        "duration": "محاضرات المؤلف الرسمية",
+        "link": "https://www.youtube.com/results?search_query=Jim+Kurose+Computer+Networking+Top+Down",
+        "desc": "محاضرات مؤلف كتاب Computer Networking: A Top-Down Approach المقرر في كليات الحاسبات."
+      },
+      {
+        "title": "MIT 6.02: Digital Communication Systems",
+        "instructor": "MIT OpenCourseWare (Prof. Hari Balakrishnan)",
+        "platform": "MIT OCW",
+        "language": "إنجليزي 🇬🇧",
+        "level": "متقدم هندسي",
+        "duration": "كورس فصلي كامل",
+        "link": "https://ocw.mit.edu/courses/6-02-digital-communication-systems-fall-2012/",
+        "desc": "المنهج الهندسي المتقدم من MIT لفهم فيزياء وسائط النقل وبروتوكولات الشبكات والتحكم بالأخطاء."
+      },
+      {
+        "title": "Network Fundamentals Full Course",
+        "instructor": "David Bombal (Cisco Expert)",
+        "platform": "YouTube",
+        "language": "إنجليزي 🇬🇧",
+        "level": "تطبيقي وعملي",
+        "duration": "14 ساعة تدريبية",
+        "link": "https://www.youtube.com/results?search_query=David+Bombal+Network+Fundamentals+Complete",
+        "desc": "تدريب عملي قوي يربط بين الجانب النظري والأجهزة الحقيقية (Routers, Switches, Topologies)."
+      }
+    ],
+    "summaryPoints": [
+      {
+        "title": "1. المكونات الخمسة للاتصال (Five Components)",
+        "desc": "الرسالة (Message)، المرسل (Sender)، المستقبل (Receiver)، وسط النقل (Transmission Medium)، والبروتوكول (Protocol)."
+      },
+      {
+        "title": "2. أنماط تدفق البيانات (Data Flow Modes)",
+        "desc": "Simplex (اتجاه واحد كالشاشة)، Half-Duplex (اتجاهين بالتبادل كاللاسلكي)، Full-Duplex (اتجاهين تزامناً كالهاتف)."
+      },
+      {
+        "title": "3. الطوبولوجيات وقانون شبكة Mesh",
+        "desc": "قانون كابلات شبكة Mesh كاملة التوصيل: n(n - 1) / 2، وعدد المنافذ في كل جهاز هو n - 1."
+      },
+      {
+        "title": "4. الطوبولوجيا النجمية (Star Topology)",
+        "desc": "تعتمد على موزع مركزي (Hub/Switch) بروابط مخصصة، وسقوط الموزع يسقط الشبكة بالكامل."
+      },
+      {
+        "title": "5. نموذج الطبقات السبع (OSI 7 Layers)",
+        "desc": "يقسم الاتصال لطبقات معيارية مستقلة لتبسيط التشخيص ومنع تعارض التقنيات المختلفة."
+      }
+    ],
+    "deepExplanations": [
+      {
+        "title": "تفصيل المكونات الخمسة لنظام الاتصال (Data Communication System):",
+        "content": "• Message: البيانات والمعلومات المراد نقلها (نصوص، أرقام، صور، صوت، فيديو).\n• Sender: الجهاز المرسل للبيانات (حاسوب، هاتف، كاميرا مراقبة).\n• Receiver: الجهاز المتلقي للمعلومة (طابعة، حاسوب، شاشة).\n• Medium: القناة الفيزيائية (سلكية كـ Twisted Pair والألياف الضوئية، أو لا سلكية كالراديو والمايكروويف).\n• Protocol: مجموعة القواعد والمعايير التي تحكم وتنسق الاتصال (بدون بروتوكول تصبح الأجهزة كشخصين يتحدثان لغتين مختلفتين)."
+      },
+      {
+        "title": "أنماط تدفق البيانات الثلاثة (Data Flow Directions):",
+        "content": "1. Simplex (أحادي الاتجاه): تدفق البيانات في مسار واحد فقط وبلا رجعة (مثال: لوحة المفاتيح والشاشة، بث التلفزيون).\n2. Half-Duplex (نصف مزدوج): تدفق البيانات في الاتجاهين ولكن ليس في نفس اللحظة (مثال: جهاز اللاسلكي Walkie-Talkie؛ عندما يتحدث طرف ينصت الآخر).\n3. Full-Duplex (مزدوج كامل): تبادل البيانات في كلا الاتجاهين في نفس اللحظة بالتزامن (مثال: المكالمات الهاتفية، شبكات الإنترنت الحديثة)."
+      },
+      {
+        "title": "مقارنة الطوبولوجيات وحسابات شبكة Mesh (من واقع الشيت):",
+        "content": "• Mesh: لكل جهاز كابل مباشر ومخصص (Dedicated Link) مع كل جهاز آخر.\n  - قانون عدد الكابلات = n(n - 1) / 2\n  - قانون عدد المنافذ (I/O Ports) في كل جهاز = n - 1\n  - الميزة: أمان فائق وخصوصية ومناعة تامة ضد تعطل باقي الخطوط (Fault Tolerance).\n  - العيب: تكلفة كابلات باهظة وصعوبة التركيب.\n• Star: كل جهاز يتصل بموزع مركزي (Hub/Switch).\n  - الميزة: سهولة التركيب والكشف عن الأعطال، واستهلاك كابلات أقل (n كابل).\n  - العيب: نقطة فشل مركزية واحدة (Single Point of Failure)؛ إذا تعطل الـ Hub تسقط الشبكة بالكامل."
+      },
+      {
+        "title": "طبقات نموذج OSI السبع ووحدات البيانات (PDUs):",
+        "content": "1. Physical: نقل الإشارات والنبضات الكهربائية/الضوئية (Unit: Bits).\n2. Data Link: العنونة الفيزيائية MAC والتحكم بالأخطاء (Unit: Frames).\n3. Network: العنونة المنطقية IP وتوجيه المسارات Routing (Unit: Packets).\n4. Transport: نقل موثوق من طرف لطرف TCP/UDP (Unit: Segments).\n5. Session: إنشاء وإدارة وإنهاء الجلسات بين التطبيقات.\n6. Presentation: تشفير البيانات وضغطها وتوحيد صيغها (Formatting & Encryption).\n7. Application: واجهة تفاعل المستخدم والتطبيقات (HTTP, DNS, FTP)."
+      }
+    ],
+    "examTraps": [
+      "فخ حساب منافذ Mesh: عدد المنافذ لكل جهاز هو (n - 1)، بينما عدد الكابلات الإجمالية هو n(n - 1)/2. لا تخلط بينهما في الامتحان!",
+      "فخ الـ Walkie-Talkie: أجهزة اللاسلكي هي Half-Duplex وليست Full-Duplex؛ لأنك تضغط على الزر للتحدث ولا تستطيع السماع في نفس اللحظة.",
+      "فخ النقطة المركزية: إذا سُئلت عن الشبكة التي تنهار بالكامل بتعطل نقطة واحدة مركزية فالإجابة هي Star Topology (عند تعطل الـ Hub).",
+      "فخ وحدات البيانات (PDUs): في طبقة Network الوحدة تسمى Packet، وفي Data Link تسمى Frame، وفي Transport تسمى Segment.",
+      "فخ تعريف البروتوكول: البروتوكول ليس جهازاً أو وسط نقل، بل هو 'مجموعة قواعد ومعايير تحكم الاتصال'."
+    ],
+    "quizQuestions": [
+      {
+        "id": 1,
+        "question": "ما هو المكون الذي يمثل القناة الفيزيائية (Physical Path) التي تعبرها البيانات من جهاز المرسل إلى المستقبل؟",
+        "options": [
+          "البروتوكول (Protocol)",
+          "وسط النقل (Transmission Medium)",
+          "المرسل (Sender)",
+          "وحدة التحكم (Controller)"
+        ],
+        "correctIndex": 1,
+        "explanation": "وسط النقل (Transmission Medium) مثل كابلات الألياف الضوئية أو الأسلاك النحاسية هو المسار المادي الفعلي لحركة الإشارات."
+      },
+      {
+        "id": 2,
+        "question": "في شبكة Mesh كاملة التوصيل تضم 8 أجهزة كمبيوتر، كم عدد خطوط الاتصال المخصصة (Duplex Links) المطلوبة؟",
+        "options": [
+          "8 كابلات",
+          "16 كابلاً",
+          "28 كابلاً",
+          "56 كابلاً"
+        ],
+        "correctIndex": 2,
+        "explanation": "وفقاً للقانون: n(n - 1) / 2 = 8 × 7 ÷ 2 = 56 ÷ 2 = 28 رابطاً كابلياً مخصصاً."
+      },
+      {
+        "id": 3,
+        "question": "في شبكة Mesh لـ 8 أجهزة، كم عدد منافذ الدخل/الخرج (I/O Ports) التي يحتاجها كل جهاز على حدة؟",
+        "options": [
+          "7 منافذ",
+          "8 منافذ",
+          "14 منفذاً",
+          "28 منفذاً"
+        ],
+        "correctIndex": 0,
+        "explanation": "يحتاج كل جهاز إلى n - 1 منافذ ليتصل بجميع الأجهزة الأخرى: 8 - 1 = 7 منافذ."
+      },
+      {
+        "id": 4,
+        "question": "اتصال لوحة المفاتيح بالحاسوب أو البث التلفزيوني الإذاعي يمثل أي نمط من أنماط تدفق البيانات؟",
+        "options": [
+          "Simplex (أحادي الاتجاه)",
+          "Half-Duplex (نصف مزدوج)",
+          "Full-Duplex (مزدوج كامل)",
+          "Multi-Access"
+        ],
+        "correctIndex": 0,
+        "explanation": "في نمط Simplex تسير الإشارات في اتجاه واحد فقط دون إمكانية للرد أو الرجوع في نفس القناة."
+      },
+      {
+        "id": 5,
+        "question": "أي من الطوبولوجيات التالية تتميز بوجود نقطة فشل مركزية وحيدة (Single Point of Failure) بحيث يسقط النظام بتعطل الموزع المركزي؟",
+        "options": [
+          "Ring Topology (الحلقية)",
+          "Bus Topology (الخطية)",
+          "Star Topology (النجمية)",
+          "Mesh Topology (الشبكية)"
+        ],
+        "correctIndex": 2,
+        "explanation": "في Star Topology، ترتبط كل الأجهزة بموزع مركزي Hub/Switch؛ وإذا تعطل الموزع تفقد الشبكة الاتصال بالكامل."
+      },
+      {
+        "id": 6,
+        "question": "ما هي وحدة البيانات (Protocol Data Unit - PDU) الرسمية المستخدمة في طبقة الشبكة (Network Layer)؟",
+        "options": [
+          "Bits (بتات)",
+          "Frames (إطارات)",
+          "Packets (حزم)",
+          "Segments (قطاعات)"
+        ],
+        "correctIndex": 2,
+        "explanation": "في طبقة Network تسمى البيانات الحزم (Packets)، بينما في Data Link تسمى Frames، وفي Transport تسمى Segments."
+      },
+      {
+        "id": 7,
+        "question": "ما الفارق الجوهري في آلية العمل بين بروتوكولي النقل TCP و UDP؟",
+        "options": [
+          "TCP غير موثوق وUDP موثوق",
+          "TCP موجه بالاتصال وموثوق بمصافحة ثلاثية، بينما UDP بدون مصافحة وسريع",
+          "UDP أبطأ بكثير من TCP",
+          "كلاهما يعمل في الطبقة الفيزيائية"
+        ],
+        "correctIndex": 1,
+        "explanation": "TCP يوفر اتصالاً موثوقاً 100% يضمن وصول البيانات بنفس الترتيب، بينما UDP خفيف وسريع ومناسب للبث المباشر."
+      },
+      {
+        "id": 8,
+        "question": "أي طبقة من طبقات نموذج OSI مسؤولة عن العنونة الفيزيائية وتعيين عناوين MAC Address للأجهزة؟",
+        "options": [
+          "Physical Layer",
+          "Data Link Layer",
+          "Network Layer",
+          "Application Layer"
+        ],
+        "correctIndex": 1,
+        "explanation": "طبقة ربط البيانات (Data Link Layer) هي المسؤولة عن إضافة عناوين MAC الفيزيائية واكتشاف أخطاء النقل في الوسط المحلي."
+      }
+    ],
+    "flashcards": [
+      {
+        "front": "Protocol (البروتوكول)",
+        "back": "مجموعة المعايير والقواعد المتفق عليها التي تنظم كيفية إرسال واستقبال وتفسير البيانات بين الأجهزة.",
+        "tag": "مكونات الاتصال"
+      },
+      {
+        "front": "Transmission Medium (وسط النقل)",
+        "back": "القناة الفيزيائية التي تسير فيها الإشارات الحاملة للرسالة من المرسل إلى المستقبل (سلكياً أو لا سلكياً).",
+        "tag": "مكونات الاتصال"
+      },
+      {
+        "front": "Full-Duplex Mode",
+        "back": "نمط نقل ثنائي الاتجاه يسمح بإرسال واستقبال البيانات في كلا الاتجاهين في نفس اللحظة (مثل شبكة الهاتف).",
+        "tag": "أنماط التدفق"
+      },
+      {
+        "front": "Mesh Topology Formula",
+        "back": "عدد الروابط المادية = n(n - 1) / 2 ، وعدد منافذ كل جهاز منفصل = n - 1.",
+        "tag": "قوانين الشبكات"
+      },
+      {
+        "front": "Star Topology (الطوبولوجيا النجمية)",
+        "back": "طوبولوجيا ترتبط فيها الأجهزة بنقطة موزع مركزي (Hub/Switch) بروابط Point-to-Point مباشرة.",
+        "tag": "طوبولوجيا"
+      },
+      {
+        "front": "Packet vs Frame",
+        "back": "الحزمة (Packet) هي وحدة البيانات في طبقة Network، بينما الإطار (Frame) هو وحدة البيانات في طبقة Data Link.",
+        "tag": "نموذج OSI"
+      },
+      {
+        "front": "MAC Address (العنوان الفيزيائي)",
+        "back": "عنوان فريد ومثبت على كرت الشبكة (NIC) مكوّن من 48 بت (12 خانة سداسية عشرية)، وتتعامل معه طبقة Data Link.",
+        "tag": "عنونة الأجهزة"
+      },
+      {
+        "front": "TCP 3-Way Handshake",
+        "back": "خطوات الاتصال الثلاثية في TCP: إرسال SYN ➔ الرد بـ SYN-ACK ➔ التأكيد بـ ACK لبدء نقل البيانات الموثوق.",
+        "tag": "بروتوكولات النقل"
+      }
+    ]
+  },
+  {
+    "id": "datamining",
+    "code": "CSC213",
+    "title": "تنقيب البيانات (Data Mining)",
+    "folderName": "DATA MINING",
+    "subtitle": "مفاهيم KDD، تنظيف وتجهيز البيانات، خوارزميات التصنيف، العنقودية، وقواعد الاقتران",
+    "instructor": "قسم علوم الحاسب ونظم المعلومات الذكية",
+    "icon": "⛏️",
+    "readiness": 85,
+    "files": [
+      {
+        "title": "المحاضرة 1: مقدمة تنقيب البيانات ودورة حياة KDD",
+        "filename": "data_mining_intro.pptx",
+        "path": "./materials/datamining/data_mining_intro.pptx",
+        "type": "PPTX",
+        "size": "0.84 MB"
+      }
+    ],
+    "activeChapter": "المحاضرة 1: Motivation, KDD Process, Architecture & Mining Tasks",
+    "status": "مكتمل وشامل",
+    "onlineCourses": [
+      {
+        "title": "Data Mining Specialization by Jiawei Han",
+        "instructor": "Prof. Jiawei Han (مؤلف الكتاب المعتمد)",
+        "platform": "Coursera / UIUC",
+        "language": "إنجليزي 🇬🇧",
+        "level": "المرجع العالمي الأول",
+        "duration": "تخصص من 3 كورسات",
+        "link": "https://www.coursera.org/specializations/data-mining",
+        "desc": "تخصص جامعة إلينوي للبروفيسور جياوي هان، مؤلف مرجع Data Mining: Concepts and Techniques."
+      },
+      {
+        "title": "Stanford CS246: Mining Massive Datasets",
+        "instructor": "Stanford University (Prof. Jure Leskovec)",
+        "platform": "YouTube / Stanford",
+        "language": "إنجليزي 🇬🇧",
+        "level": "متقدم وتحليل بيانات ضخمة",
+        "duration": "فصل دراسي كامل",
+        "link": "https://www.youtube.com/results?search_query=Stanford+CS246+Mining+Massive+Datasets",
+        "desc": "أقوى كورس من جامعة ستانفورد في التعامل مع البيانات الضخمة، قواعد الارتباط، وخوارزميات العنقودية."
+      },
+      {
+        "title": "سلسلة تنقيب البيانات باللغة العربية (Data Mining Arabic)",
+        "instructor": "نخبة من أساتذة كليات الحاسبات",
+        "platform": "YouTube",
+        "language": "عربي 🇸🇦",
+        "level": "جامعي تطبيقي",
+        "duration": "شرح متسلسل للمنهج",
+        "link": "https://www.youtube.com/results?search_query=data+mining+شرح+عربي+جامعي",
+        "desc": "شرح باللغة العربية يغطي خطوات الـ KDD، ومراحل تنظيف البيانات، وتطبيق خوارزميات التصنيف."
+      },
+      {
+        "title": "MIT 6.034: Artificial Intelligence & Pattern Mining",
+        "instructor": "MIT OpenCourseWare (Prof. Patrick Winston)",
+        "platform": "MIT OCW",
+        "language": "إنجليزي 🇬🇧",
+        "level": "تأسيسي عميق",
+        "duration": "محاضرات جامعية كاملة",
+        "link": "https://ocw.mit.edu/courses/6-034-artificial-intelligence-fall-2010/",
+        "desc": "محاضرات بروفيسور باتريك ونستون من MIT لشرح استخراج الأنماط وشبكات التعلم والأشجار التنبؤية."
+      },
+      {
+        "title": "Data Mining & Data Science Full Course",
+        "instructor": "freeCodeCamp",
+        "platform": "YouTube",
+        "language": "إنجليزي 🇬🇧",
+        "level": "شامل مع بايثون",
+        "duration": "6 ساعات تدريبية",
+        "link": "https://www.youtube.com/results?search_query=freeCodeCamp+Data+Mining+Full+Course",
+        "desc": "دورة تطبيقية عملية لبناء خطوط تنقيب البيانات واستكشاف العلاقات وقواعد الـ Association."
+      }
+    ],
+    "summaryPoints": [
+      {
+        "title": "1. معضلة غزارة البيانات وفقر المعرفة",
+        "desc": "السبب الرئيسي لظهور تنقيب البيانات: Data Rich, Information Poor؛ نمتلك كميات هائلة من البيانات لكننا نعجز عن استخراج الأنماط المفيدة منها يدوياً."
+      },
+      {
+        "title": "2. مراحل عملية الـ KDD الخمس",
+        "desc": "Selection (الاختيار) ➔ Preprocessing (التنظيف والمعالجة) ➔ Transformation (التحويل والتطبيع) ➔ Data Mining (التنقيب) ➔ Evaluation (التقييم والتفسير)."
+      },
+      {
+        "title": "3. مهام تنقيب البيانات (Mining Tasks)",
+        "desc": "تنقسم لمهام وصفية (Descriptive كالارتباط والعنقودية) ومهام تنبؤية (Predictive كالتصنيف والانحدار)."
+      },
+      {
+        "title": "4. الفرق الجوهري بين التصنيف والعنقودية",
+        "desc": "Classification عملية خاضعة للإشراف (Supervised) بوجود فئات مسبقة، بينما Clustering غير خاضعة للإشراف (Unsupervised) تكتشف المجموعات ذاتياً."
+      },
+      {
+        "title": "5. قواعد الاقتران وخوارزمية Apriori",
+        "desc": "استكشاف العناصر التي تُشترى معاً في المعاملات التجارية بحساب مقياسي الدعم (Support) والثقة (Confidence)."
+      }
+    ],
+    "deepExplanations": [
+      {
+        "title": "مراحل دورة حياة اكتشاف المعرفة من البيانات (KDD Process):",
+        "content": "• 1. Data Cleaning: إزالة الضوضاء (Noise) والتعامل مع القيم المفقودة وغير المتسقة.\n• 2. Data Integration: دمج مصادر البيانات المتعددة وحل تعارض المفاتيح.\n• 3. Data Selection: استرجاع البيانات ذات الصلة بمشروع التحليل من المستودع.\n• 4. Data Transformation: توحيد المقاييس (Normalization) وتقليل الأبعاد والخصائص.\n• 5. Data Mining: تطبيق الخوارزميات الذكية (مثل Decision Trees, K-Means, Apriori) لاستخراج الأنماط الخفية.\n• 6. Pattern Evaluation: تقييم الأنماط الحقيقية وفقاً لمقاييس الدقة والفائدة.\n• 7. Knowledge Presentation: تقديم المعرفة للمدراء ومتخذي القرار عبر رسوم بيانية تفاعلية."
+      },
+      {
+        "title": "المقارنة الحاسمة: Classification مقابل Clustering:",
+        "content": "• Classification (التصنيف): تقنية خاضعة للإشراف (Supervised Learning). البيانات التدريبية تكون معنونة بفئات واضحة مسبقاً (Labeled). هدفها بناء نموذج لتصنيف البيانات الجديدة غير المعروفة (مثال: تصنيف المعاملات البنكية إلى 'سليمة' أو 'احتيالية').\n• Clustering (العنقدة/التجميع): تقنية غير خاضعة للإشراف (Unsupervised Learning). لا توجد فئات محددة مسبقاً (Unlabeled). هدفها جمع العناصر المتشابهة في نفس المجموعة (Cluster) مع جعل الفروق بين المجموعات أقصى ما يمكن (مثال: تقسيم عملاء المتجر إلى فئات استهلاكية بناءً على سلوك الشراء)."
+      },
+      {
+        "title": "قواعد الاقتران (Association Rules) ومقاييس الأهمية:",
+        "content": "قاعدة الارتباط تُكتب في صورة: X ➔ Y (إذا اشترى العميل X فإنه يشتري Y).\n• Support (الدعم): نسبة المعاملات التي تحتوي على X و Y معاً إلى إجمالي كل المعاملات = P(X ∪ Y).\n• Confidence (الثقة): النسبة الاحتمالية لشراء Y بشرط شراء X = P(Y | X) = Support(X ∪ Y) / Support(X).\n• Lift (الرفع): يقيس مدى ترابط X و Y باستبعاد عنصر الصدفة = Confidence / P(Y). إذا كان > 1 فالارتباط قوي ومفيد."
+      },
+      {
+        "title": "مستودعات البيانات وعمليات الـ OLAP التحليلية:",
+        "content": "مستودع البيانات (Data Warehouse) ينظم البيانات في نماذج متعددة الأبعاد (Multidimensional Cubes) مثل Star Schema و Snowflake Schema.\n• Roll-up: تجميع البيانات لأعلى بمستوى تفصيل أقل (مثال: من مبيعات الأيام إلى مبيعات الشهور).\n• Drill-down: النزول لمستوى تفصيل أعمق (مثال: من مبيعات المحافظة إلى مبيعات كل فرع).\n• Slice and Dice: اختيار شريحة أو بعد محدد للمقارنة."
+      }
+    ],
+    "examTraps": [
+      "فخ الـ Data Mining جزء من KDD: تنقيب البيانات (Data Mining) ليس العملية الكاملة بل هو خطوة جوهرية ضمن مسار اكتشاف المعرفة (KDD).",
+      "فخ التصنيف مقابل العنقودية: إذا ذكر في السؤال 'Unlabeled Data' أو 'No predefined classes' فالإجابة فوراً هي Clustering (عنقودية).",
+      "فخ قانون الـ Confidence: في قاعدة X ➔ Y، المقام في حساب الثقة هو Support(X) وليس Support(Y).",
+      "فخ مرحلة الـ Preprocessing: تمثل ما يقرب من 60% إلى 80% من الجهد الإجمالي في أي مشروع تنقيب بيانات ناجح.",
+      "فخ الـ Star Schema: يتكون من جدول حقائق مركزي واحد (Fact Table) محاط بجداول الأبعاد (Dimension Tables)."
+    ],
+    "quizQuestions": [
+      {
+        "id": 1,
+        "question": "ما هي المقولة الشهيرة التي تصف الدوافع الحقيقية وراء ظهور وتطور علم تنقيب البيانات؟",
+        "options": [
+          "Data Poor, Information Rich",
+          "Data Rich, Information Poor (غزارة في البيانات وفقر في المعرفة)",
+          "No Data, High Knowledge",
+          "Data Equals Information"
+        ],
+        "correctIndex": 1,
+        "explanation": "المشكلة الكبرى في العصر الحديث هي امتلاك كميات هائلة من البيانات غير المنظمة مع صعوبة استخراج معلومات وقرارات نافعة منها."
+      },
+      {
+        "id": 2,
+        "question": "عملية تنقيب البيانات (Data Mining) تمثل:",
+        "options": [
+          "العملية الكاملة من البداية للنهاية بديلاً عن KDD",
+          "خطوة أساسية وجوهرية ضمن خطوات عملية اكتشاف المعرفة (KDD Process)",
+          "مرحلة تجهيز وتفريغ الهارد ديسك فقط",
+          "كتابة الأكواد بلغة C++ فقط"
+        ],
+        "correctIndex": 1,
+        "explanation": "تنقيب البيانات هو الخطوة الأساسية في مسار KDD التي يتم فيها تطبيق الخوارزميات الذكية لاستخراج الأنماط."
+      },
+      {
+        "id": 3,
+        "question": "أي من الخيارات التالية يُعد مثالاً على مهمة تنقيب بيانات غير خاضعة للإشراف (Unsupervised Mining Task)؟",
+        "options": [
+          "التصنيف (Classification)",
+          "التجميع/العنقودية (Clustering)",
+          "التنبؤ الرقمي (Regression)",
+          "تشخيص الأمراض بناءً على تاريخ طبي معنون"
+        ],
+        "correctIndex": 1,
+        "explanation": "العنقودية (Clustering) تتعامل مع بيانات غير معنونة مسبقاً (Unlabeled Data) وتقوم بتجميع المتشابهات ذاتياً."
+      },
+      {
+        "id": 4,
+        "question": "في قاعدة اقتران لسلة المشتريات: {الخبز} ➔ {الجبن}، كيف يتم حساب مقياس الثقة (Confidence) رياضياً؟",
+        "options": [
+          "Support(الخبز والجبن) ÷ Support(الخبز)",
+          "Support(الخبز) ÷ Support(الجبن)",
+          "عدد المعاملات الكلي ÷ 2",
+          "Support(الجبن) ÷ Support(الخبز والجبن)"
+        ],
+        "correctIndex": 0,
+        "explanation": "الثقة تحسب نسبة ظهور السلعتين معاً مقسومة على دعم السلعة الشرطية (الخبز): Support(X ∪ Y) / Support(X)."
+      },
+      {
+        "id": 5,
+        "question": "ما هي الخطوة في مسار KDD المسؤولة عن التعامل مع القيم الشاذة (Outliers) والتخلص من الضوضاء والقيم المفقودة؟",
+        "options": [
+          "Data Selection",
+          "Data Cleaning & Preprocessing (تنظيف ومعالجة البيانات)",
+          "Pattern Evaluation",
+          "Knowledge Deployment"
+        ],
+        "correctIndex": 1,
+        "explanation": "مرحلة الـ Preprocessing والتنظيف تعالج القيم الشاذة، تملأ الفراغات، وتزيل التناقضات لتجهيز البيانات للخوارزميات."
+      },
+      {
+        "id": 6,
+        "question": "عملية تحويل البيانات من مستوى تفصيلي دقيق إلى مستوى أكثر تجريداً وشمولية في مكعبات OLAP (مثل التحول من مبيعات الأيام لمبيعات الشهور) تسمى:",
+        "options": [
+          "Drill-down",
+          "Roll-up",
+          "Slice",
+          "Pivot"
+        ],
+        "correctIndex": 1,
+        "explanation": "الـ Roll-up يصعد بالبيانات إلى مستوى أعلى بتفاصيل مجمعة، بينما Drill-down ينزل للتفاصيل الدقيقة."
+      },
+      {
+        "id": 7,
+        "question": "في مخطط نجمي (Star Schema) لمستودع بيانات، يقع في المنتصف جدول مركزي يُطلق عليه:",
+        "options": [
+          "Dimension Table (جدول الأبعاد)",
+          "Fact Table (جدول الحقائق والمقاييس الرقمية)",
+          "Index Table",
+          "Log Table"
+        ],
+        "correctIndex": 1,
+        "explanation": "جدول الحقائق (Fact Table) يتوسط المخطط النجمي ويحتوي على المقاييس الكمية (المبيعات، الكميات) ومفاتيح الأبعاد."
+      },
+      {
+        "id": 8,
+        "question": "عند تقييم خوارزميات التصنيف (Classification)، المخطط الرياضي المربع الذي يقارن الفئات الفعلية بالفئات المتوقعة يسمى:",
+        "options": [
+          "Correlation Matrix",
+          "Confusion Matrix (مصفوفة الالتباس)",
+          "Scatter Plot",
+          "Decision Forest"
+        ],
+        "correctIndex": 1,
+        "explanation": "مصفوفة الالتباس Confusion Matrix تعرض (TP, TN, FP, FN) لحساب مقاييس الدقة، الاسترجاع، و F1-Score بدقة."
+      }
+    ],
+    "flashcards": [
+      {
+        "front": "KDD (اكتشاف المعرفة في قواعد البيانات)",
+        "back": "العملية المنظمة الكاملة لتحديد أنماط صالحة، جديدة، ومفيدة داخل مجموعات البيانات الضخمة.",
+        "tag": "مفاهيم KDD"
+      },
+      {
+        "front": "Classification (التصنيف)",
+        "back": "مهمة تنبؤية خاضعة للإشراف (Supervised) تعين كل سجل إلى فئة من فئات معرفة مسبقاً (Predefined Classes).",
+        "tag": "مهام التنقيب"
+      },
+      {
+        "front": "Clustering (العنقودية)",
+        "back": "مهمة وصفية غير خاضعة للإشراف (Unsupervised) تجمع البيانات في مجموعات متشابهة دون تصنيف مسبق.",
+        "tag": "مهام التنقيب"
+      },
+      {
+        "front": "Support (مقياس الدعم)",
+        "back": "نسبة المعاملات التي تحتوي على مجموعة العناصر المحددة مقارنة بإجمالي عدد المعاملات في قاعدة البيانات.",
+        "tag": "قواعد الاقتران"
+      },
+      {
+        "front": "Confidence (مقياس الثقة)",
+        "back": "احتمالية شراء العنصر Y في معاملة معينة مع العلم أنها تحتوي بالفعل على العنصر X: P(Y | X).",
+        "tag": "قواعد الاقتران"
+      },
+      {
+        "front": "Outlier Detection (كشف القيم الشاذة)",
+        "back": "اكتشاف السجلات التي تنحرف بشكل كبير عن التوزيع الطبيعي لبقية البيانات (تُستخدم لكشف الاحتيال).",
+        "tag": "معالجة البيانات"
+      },
+      {
+        "front": "Data Normalization (تطبيع البيانات)",
+        "back": "إعادة قياس قيم الخصائص لتصبح في نطاق موحد محدد (مثل [0, 1]) لمنع هيمنة الأرقام الكبيرة على النموذج.",
+        "tag": "تحويل البيانات"
+      },
+      {
+        "front": "Fact Table (جدول الحقائق)",
+        "back": "الجدول المركزي في مستودع البيانات الذي يخزن القياسات الرقمية والأحداث والمفاتيح الخارجية لجداول الأبعاد.",
+        "tag": "مستودعات البيانات"
+      }
+    ]
+  },
+  {
+    "id": "digitallogics",
+    "code": "DIG-101",
+    "title": "المنطق الرقمي وهندسة الحاسب (Digital Logics)",
+    "folderName": "Digital Logics",
+    "subtitle": "أنظمة العد، جبر بول، البوابات الشاملة، مخططات كارنوف، والدوائر التوافقية",
+    "instructor": "قسم علوم وهندسة الحاسب والأنظمة الرقمية",
+    "icon": "⚡",
+    "readiness": 92,
+    "files": [
+      {
+        "title": "الشيت 1: أنظمة العد، البوابات المنطقية، وتبسيط خرائط كارنوف",
+        "filename": "digital_logics_sheet_1.pdf",
+        "path": "./materials/digitallogics/digital_logics_sheet_1.pdf",
+        "type": "PDF",
+        "size": "0.13 MB"
+      }
+    ],
+    "activeChapter": "الشيت 1: Number Systems, Boolean Algebra & Gate Minimization",
+    "status": "مكتمل وشامل",
+    "onlineCourses": [
+      {
+        "title": "Digital Electronics Full Academic Course",
+        "instructor": "Neso Academy (المرجع العالمي الأول في الإلكترونيات الرقمية)",
+        "platform": "YouTube (Neso Academy)",
+        "language": "إنجليزي 🇬🇧",
+        "level": "تأسيسي لهندسة الحاسب",
+        "duration": "أكثر من 150 درساً تفاعلياً",
+        "link": "https://www.youtube.com/playlist?list=PLBlnK6fEyqRjMH3kWf6z6P101UJAr41Oo",
+        "desc": "المرجع الأشهر في العالم لطلاب حاسبات لفهم جداول الحقيقة، بوابات NAND و NOR، وخرائط كارنوف."
+      },
+      {
+        "title": "دورة تصميم المنطق الرقمي (Digital Logic Design)",
+        "instructor": "د. أحمد خليل ونخبة من الأساتذة",
+        "platform": "YouTube",
+        "language": "عربي 🇸🇦",
+        "level": "جامعي خطوة بخطوة",
+        "duration": "شرح كامل للشيتات",
+        "link": "https://www.youtube.com/results?search_query=تصميم+المنطق+الرقمي+digital+logic+شرح+عربي",
+        "desc": "شرح أكاديمي باللغة العربية مع حلول كاملة لمسائل تحويلات أنظمة العد وتبسيط الدوائر الرقمية."
+      },
+      {
+        "title": "MIT 6.004: Computation Structures",
+        "instructor": "MIT OpenCourseWare (Prof. Chris Terman)",
+        "platform": "MIT OCW",
+        "language": "إنجليزي 🇬🇧",
+        "level": "بناء المعالجات الرقمية",
+        "duration": "فصل دراسي كامل",
+        "link": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/",
+        "desc": "كورس معهد ماساتشوستس للتكنولوجيا لبناء البوابات المنطقية وصولاً إلى تصميم معالج حاسوبي كامل."
+      },
+      {
+        "title": "Build an 8-bit computer from scratch",
+        "instructor": "Ben Eater (Hardware Master)",
+        "platform": "YouTube",
+        "language": "إنجليزي 🇬🇧",
+        "level": "عملي بالقطع الإلكترونية",
+        "duration": "سلسلة بناء حاسوب كامل",
+        "link": "https://www.youtube.com/playlist?list=PLowKtXNTBypGqImE405J2565dvjafglHU",
+        "desc": "رحلة بصرية ممتعة تشاهد فيها المنطق الرقمي وبوابات AND و OR تعمل على لوحات توصيل حقيقية."
+      },
+      {
+        "title": "Introduction to Digital Systems and Logic Design",
+        "instructor": "Coursera / University of London",
+        "platform": "Coursera (مجاني Audit)",
+        "language": "إنجليزي 🇬🇧",
+        "level": "جامعي معتمد",
+        "duration": "6 أسابيع",
+        "link": "https://www.coursera.org/learn/digital-systems",
+        "desc": "كورس جامعي يركز على تصميم الدوائر التوافقية والتتابعية وتطبيق لغات وصف العتاد (HDL)."
+      }
+    ],
+    "summaryPoints": [
+      {
+        "title": "1. أنظمة العد ومكمل 2 (2's Complement)",
+        "desc": "التحويل بين الثنائي والثماني والسداسي عشري، وحساب مكمل 2 لتمثيل الأعداد السالبة عبر قلب البتات وإضافة 1."
+      },
+      {
+        "title": "2. البوابات الشاملة (Universal Gates)",
+        "desc": "بوابات NAND و NOR تسمى بوابات شاملة لأن بإمكانها بناء وتوليد جميع الدوال المنطقية دون أي بوابات أخرى."
+      },
+      {
+        "title": "3. قوانين دي مورجان (De Morgan's Theorems)",
+        "desc": "قانونان جوهريان: (A · B)' = A' + B' و (A + B)' = A' · B' لتحويل الضرب إلى جمع والعكس."
+      },
+      {
+        "title": "4. مخططات كارنوف (K-Maps) لتبسيط الدوائر",
+        "desc": "طريقة بصرية لتبسيط الدوال المنطقية بتجميع الآحاد المتجاورة في مجموعات من مضاعفات الرقم 2 (1، 2، 4، 8، 16)."
+      },
+      {
+        "title": "5. الدوائر التوافقية (Half & Full Adders)",
+        "desc": "الجامع النصفي يجمع بتين وينتج Sum (بوابة XOR) و Carry (بوابة AND)، والجامع الكامل يضيف Carry In السابق."
+      }
+    ],
+    "deepExplanations": [
+      {
+        "title": "التحويلات بين أنظمة العد وتمثيل الأعداد السالبة بمكمل 2:",
+        "content": "• من ثنائي إلى سداسي عشري: نقسم الرقم إلى مجموعات من 4 بتات من اليمين لليسار، ونعوض بقيمتها (A=10, B=11, C=12, D=13, E=14, F=15).\n• مكمل 1 (1's Complement): قلب كل 0 إلى 1 وكل 1 إلى 0.\n• مكمل 2 (2's Complement): حساب مكمل 1 ثم إضافة الرقم 1 في الخانة الصغرى. يستخدمه المعالج لإجراء عمليات الطرح عبر الجمع مباشرة دون الحاجة لدوائر طرح منفصلة."
+      },
+      {
+        "title": "البوابات الشاملة (Universal Gates - NAND & NOR):",
+        "content": "لماذا تسمى Universal؟ لأن أي دائرة منطقية في العالم يمكن بناؤها باستخدام بوابات NAND وحدها أو NOR وحدها، مما يقلل تكلفة تصنيع الرقائق الإلكترونية (ICs):\n• عاكس NOT باستخدام NAND: نوصل مدخلي الـ NAND معاً (A · A)' = A'.\n• بوابة AND باستخدام NAND: نمرر خرج NAND على عاكس NAND آخر.\n• بوابة OR باستخدام NAND: نطبق نظريات دي مورجان: (A' · B')' = A + B."
+      },
+      {
+        "title": "أسرار تبسيط مخططات كارنوف (Karnaugh Maps):",
+        "content": "1. ترتيب الخلايا يتبع كود غراي (Gray Code: 00, 01, 11, 10) حتى يتغير بت واحد فقط بين كل خليتين متجاورتين.\n2. التجميع يكون فقط في كتل من قوى العدد 2: (1, 2, 4, 8, 16).\n3. خاصية الالتفاف (Wrapping): الحافة اليمنى تعتبر متجاورة مع الحافة اليسرى، والحافة العليا متجاورة مع السفلى، والأركان الأربعة تشكل مجموعة واحدة من 4 خلايا!\n4. كلما كبرت المجموعة، تضاعف عدد المتغيرات التي يتم التخلص منها وتبسيطها."
+      },
+      {
+        "title": "تصميم دوائر الجمع الثنائي (Adders):",
+        "content": "• Half Adder (الجامع النصفي): يجمع مدخلين A و B:\n  - Sum = A ⊕ B (بوابة XOR)\n  - Carry = A · B (بوابة AND)\n• Full Adder (الجامع الكامل): يجمع 3 بتات (A, B, Carry In):\n  - Sum = A ⊕ B ⊕ Cin\n  - Carry Out = AB + Cin(A ⊕ B)\n  - يتكون الجامع الكامل من اثنين Half Adders وبوابة OR واحدة."
+      }
+    ],
+    "examTraps": [
+      "فخ كود غراي في K-Map: الترتيب الصحيح للأعمدة والصفوف هو 00 ثم 01 ثم 11 ثم 10. كتابة 10 قبل 11 يفسد المسألة وتوزيع الخلايا تماماً!",
+      "فخ الأركان الأربعة: الأركان الأربعة في جدول كارنوف 4×4 تشكل مجموعة واحدة صالحة للتجميع من 4 خلايا تحذف متغيرين!",
+      "فخ Don't Care (X): حالات الـ Don't Care نعتبرها (1) فقط إذا كانت ستساعدنا في تكبير مجموعة الآحاد، ونتجاهلها كـ (0) إذا لم تفدنا.",
+      "فخ بوابة XOR: تخرج 1 فقط إذا كان عدد الآحاد في المدخلات فردياً (أي عند اختلاف المدخلين في حالة مدخلين).",
+      "فخ مكمل 2: البت الأخير في أقصى اليسار يمثل إشارة الرقم (MSB: 0 للموجب و 1 للسالب)."
+    ],
+    "quizQuestions": [
+      {
+        "id": 1,
+        "question": "ما هو تمثيل الرقم الثنائي (1101) في النظام العشري؟",
+        "options": [
+          "11",
+          "13",
+          "15",
+          "9"
+        ],
+        "correctIndex": 1,
+        "explanation": "الحساب بالأوزان: (1 × 2³) + (1 × 2²) + (0 × 2¹) + (1 × 2⁰) = 8 + 4 + 0 + 1 = 13."
+      },
+      {
+        "id": 2,
+        "question": "ما هو ناتج حساب مكمل 2 (2's Complement) للرقم الثنائي المكون من 4 بتات: (1010)؟",
+        "options": [
+          "0101",
+          "0110",
+          "1100",
+          "0011"
+        ],
+        "correctIndex": 1,
+        "explanation": "مكمل 1 هو قلب البتات ➔ 0101، ثم نضيف 1 في الخانة الأولى: 0101 + 1 = 0110."
+      },
+      {
+        "id": 3,
+        "question": "وفقاً لنظريات دي مورجان (De Morgan's Laws)، المقدار المنطقي المعكوس (A · B)' يكافئ تماماً:",
+        "options": [
+          "A' · B'",
+          "A' + B'",
+          "A + B",
+          "(A + B)'"
+        ],
+        "correctIndex": 1,
+        "explanation": "نفي حاصل الضرب المنطقي يتحول إلى مجموع المعكوسات: (A · B)' = A' + B'."
+      },
+      {
+        "id": 4,
+        "question": "لماذا تُصنف بوابتا NAND و NOR ضمن 'البوابات الشاملة' (Universal Logic Gates) في هندسة العتاد؟",
+        "options": [
+          "لأنها أسرع بوابات في استهلاك الطاقة",
+          "لأن أي دالة منطقية يمكن بناؤها حصرياً باستخدامهما دون الحاجة لأي بوابات أخرى",
+          "لأنها تقبل عدداً لا نهائياً من المدخلات",
+          "لأنها بوابات تناظرية وليست رقمية"
+        ],
+        "correctIndex": 1,
+        "explanation": "تسمى Universal لأن المعالجات تستطيع تصنيع كل بوابات AND و OR و NOT باستخدام خلايا NAND أو NOR وحدها."
+      },
+      {
+        "id": 5,
+        "question": "في مخطط كارنوف (K-Map)، ما هو السبب في ترتيب خلايا الأعمدة والصفوف بتسلسل (00, 01, 11, 10)؟",
+        "options": [
+          "لتقليل مساحة الجدول",
+          "لتطبيق ترميز Gray Code بحيث يتغير بت واحد فقط بين كل خليتين متجاورتين",
+          "لترتيب الأرقام تصاعدياً",
+          "للسماح بالقيم العشرية"
+        ],
+        "correctIndex": 1,
+        "explanation": "كود غراي يضمن أن الخلايا المتجاورة تختلف في متغير واحد فقط، مما يسمح بحذفه واختصاره رياضياً."
+      },
+      {
+        "id": 6,
+        "question": "في دائرة الجامع النصفي (Half Adder)، ما هي البوابة المنطقية المسؤولة عن إنتاج خانة المجموع (Sum)؟",
+        "options": [
+          "بوابة AND",
+          "بوابة OR",
+          "بوابة XOR",
+          "بوابة NAND"
+        ],
+        "correctIndex": 2,
+        "explanation": "المجموع Sum = A ⊕ B يُنتج عبر بوابة XOR، بينما خانة الحمل Carry = A · B تُنتج عبر بوابة AND."
+      },
+      {
+        "id": 7,
+        "question": "إذا كان لدينا 4 أركان جدول كارنوف تحتوي على آحاد (1s)، هل يمكن دمج الأركان الأربعة في مجموعة واحدة؟",
+        "options": [
+          "لا، لأن الأركان متباعدة وغير متجاورة",
+          "نعم، لأن خاصية الالتفاف (Wrapping) تجعل الأركان الأربعة متجاورة هندسياً",
+          "فقط في الجداول ثنائية المتغيرات",
+          "فقط إذا كانت القيمة 0"
+        ],
+        "correctIndex": 1,
+        "explanation": "خاصية الالتفاف تدمج الأركان الأربعة معاً كمجموعة صالحة من 4 خلايا تلغي متغيرين وتوفر دائرة شديدة البساطة."
+      },
+      {
+        "id": 8,
+        "question": "ما هي وظيفة دائرة مجمع البيانات (Multiplexer - MUX) في المعالجات الرقمية؟",
+        "options": [
+          "توليد إشارات الساعة",
+          "اختيار إدخال واحد من بين عدة خطوط بيانات إدخال وتوجيهه إلى مخرج واحد باستخدام خطوط التحكم",
+          "تخزين الأوامر بشكل دائم",
+          "تحويل الإشارات من رقمية لتناظرية"
+        ],
+        "correctIndex": 1,
+        "explanation": "الـ MUX يعمل كمحول مسارات رقمي (Data Selector) يمرر مدخلاً واحداً من بين عدة مدخلات إلى المخرج حسب إشارة Select."
+      }
+    ],
+    "flashcards": [
+      {
+        "front": "2's Complement (مكمل 2)",
+        "back": "طريقة تمثيل الأعداد الصحيحة السالبة في الحواسيب عبر حساب مكمل 1 وإضافة 1، مما يسهل الطرح بالجمع.",
+        "tag": "أنظمة العد"
+      },
+      {
+        "front": "Universal Gate (البوابة الشاملة)",
+        "back": "بوابة (مثل NAND أو NOR) يمكن من خلالها توليد وتصميم جميع البوابات والدوائر المنطقية الأخرى دون استثناء.",
+        "tag": "البوابات الرقمية"
+      },
+      {
+        "front": "De Morgan's First Law",
+        "back": "نفي الضرب هو جمع النفيين: (A · B)' = A' + B'؛ تحويل جوهري لتبسيط الدوائر المنطقية.",
+        "tag": "جبر بول"
+      },
+      {
+        "front": "Karnaugh Map (K-Map)",
+        "back": "مصفوفة بصرية لتبسيط التعبيرات البولية وتحديد الحل المختصر بدون الدخول في إثباتات جبرية طويلة.",
+        "tag": "التبسيط المنطقي"
+      },
+      {
+        "front": "Half Adder (الجامع النصفي)",
+        "back": "دائرة تجمع بتين ثنائيين فقط وتنتج ناتجين: المجموع Sum (عبر XOR) والحمل Carry (عبر AND).",
+        "tag": "الدوائر التوافقية"
+      },
+      {
+        "front": "Full Adder (الجامع الكامل)",
+        "back": "دائرة تجمع 3 بتات (A, B, بالإضافة لحمل المرحلة السابقة Cin) وتتكون من نصفي جامع وبوابة OR.",
+        "tag": "الدوائر التوافقية"
+      },
+      {
+        "front": "Don't Care Condition (X)",
+        "back": "حالة مدخلات لا يمكن حدوثها أو لا تؤثر في الخرج، نستغلها كـ 1 لتكبير مجموعات K-Map أو كـ 0 حسب الأفضلية.",
+        "tag": "K-Maps"
+      },
+      {
+        "front": "Multiplexer (MUX)",
+        "back": "دائرة توافقية رقمية تمتلك 2ⁿ خطوط إدخال و n خطوط اختيار، وتمرر خطاً واحداً فقط إلى المخرج النهائي.",
+        "tag": "الدوائر التوافقية"
+      }
+    ]
+  },
+  {
+    "id": "ml",
+    "code": "ML-401",
+    "title": "تعلم الآلة والذكاء الاصطناعي (Machine Learning)",
+    "folderName": "ML",
+    "subtitle": "خوارزميات التعلم، التراجع الخطي واللوجستي، معضلة الإفراط في الملاءمة، ومقاييس الأداء",
+    "instructor": "قسم الذكاء الاصطناعي وعلوم البيانات",
+    "icon": "🤖",
+    "readiness": 87,
+    "files": [
+      {
+        "title": "المحاضرة 0: مقدمة وخارطة طريق خوارزميات تعلم الآلة",
+        "filename": "ml_lecture_0.pdf",
+        "path": "./materials/ml/ml_lecture_0.pdf",
+        "type": "PDF",
+        "size": "3.64 MB"
+      }
+    ],
+    "activeChapter": "المحاضرة التمهيدية 0: AI vs ML, Learning Paradigms & Core Challenges",
+    "status": "مكتمل وشامل",
+    "onlineCourses": [
+      {
+        "title": "Machine Learning Specialization by Andrew Ng",
+        "instructor": "Andrew Ng (مؤسس DeepLearning.AI وكورسيرا)",
+        "platform": "Coursera (مجاني Audit)",
+        "language": "إنجليزي 🇬🇧",
+        "level": "أشهر دورة ذكاء اصطناعي بالعالم",
+        "duration": "3 كورسات معتمدة",
+        "link": "https://www.coursera.org/specializations/machine-learning-introduction",
+        "desc": "الكورس التأسيسي رقم 1 على مستوى العالم، يشرح الانحدار، الشبكات العصبية، والـ Regularization من الصفر."
+      },
+      {
+        "title": "Stanford CS229: Machine Learning Lectures",
+        "instructor": "Stanford University (Prof. Andrew Ng)",
+        "platform": "YouTube / Stanford",
+        "language": "إنجليزي 🇬🇧",
+        "level": "جامعي متعمق رياضياً",
+        "duration": "فصل دراسي كامل",
+        "link": "https://www.youtube.com/results?search_query=Stanford+CS229+Machine+Learning+Complete",
+        "desc": "محاضرات جامعة ستانفورد الرسمية للغوص في الرياضيات، الاحتمالات، واشتقاقات دوال التكلفة."
+      },
+      {
+        "title": "سلسلة تعلم الآلة باللغة العربية (Machine Learning Arabic)",
+        "instructor": "م. هشام عاصم (Hesham Asem)",
+        "platform": "YouTube",
+        "language": "عربي 🇸🇦",
+        "level": "تطبيقي مع بايثون",
+        "duration": "أكثر من 60 درساً عملياً",
+        "link": "https://www.youtube.com/results?search_query=Hesham+Asem+Machine+Learning+Arabic",
+        "desc": "شرح عربي تطبيقي رائع يغطي مكتبات Scikit-Learn، معالجة البيانات، وخوارزميات التدريب والتقييم."
+      },
+      {
+        "title": "MIT 6.S191: Introduction to Deep Learning",
+        "instructor": "MIT OpenCourseWare (Alexander Amini)",
+        "platform": "YouTube / MIT",
+        "language": "إنجليزي 🇬🇧",
+        "level": "متقدم وحديث",
+        "duration": "سلسلة سنوية مكثفة",
+        "link": "https://www.youtube.com/results?search_query=MIT+6.S191+Introduction+to+Deep+Learning",
+        "desc": "أحدث دورة من معهد MIT لتغطية الانتقال من نماذج تعلم الآلة الكلاسيكية إلى الشبكات العميقة."
+      },
+      {
+        "title": "Practical Deep Learning for Coders",
+        "instructor": "Jeremy Howard (Fast.ai)",
+        "platform": "Fast.ai",
+        "language": "إنجليزي 🇬🇧",
+        "level": "عملي بالبرمجة",
+        "duration": "كورس تفاعلي كامل",
+        "link": "https://course.fast.ai/",
+        "desc": "منهج عملي ممتاز يعلمك تدريب النماذج وتقييمها بأقل عدد من أسطر الكود وأعلى كفاءة."
+      }
+    ],
+    "summaryPoints": [
+      {
+        "title": "1. تعريف تعلم الآلة (Machine Learning)",
+        "desc": "قدرة الأنظمة الحاسوبية على التعلم وتحسين أدائها في مهمة معينة من خلال الخبرة والبيانات السابقة دون برمجة القواعد صراحة."
+      },
+      {
+        "title": "2. أنماط التعلم الثلاثة (Learning Paradigms)",
+        "desc": "التعلم الخاضع للإشراف (Supervised بأمثلة معنونة)، غير الخاضع للإشراف (Unsupervised لاكتشاف الأنماط)، والتعلم التعزيزي (Reinforcement بالمكافأة والعقاب)."
+      },
+      {
+        "title": "3. معضلة Overfitting مقابل Underfitting",
+        "desc": "Overfitting: النموذج حفظ بيانات التدريب وفشل في التعميم (High Variance). Underfitting: النموذج بسيط جداً ولم يستوعب النمط (High Bias)."
+      },
+      {
+        "title": "4. دالة التكلفة وتناقص التدرج (Cost Function & Gradient Descent)",
+        "desc": "دالة التكلفة تقيس نسبة خطأ النموذج، وخوارزمية Gradient Descent تعدل الأوزان تدريجياً لتقليل الخطأ للحد الأدنى."
+      },
+      {
+        "title": "5. لعنة الأبعاد ومقاييس التقييم",
+        "desc": "زيادة الخصائص تجعل الفضاء متفرقاً (Curse of Dimensionality)؛ ويتم تقييم النماذج بمقاييس دقيقة: Precision, Recall, F1-Score."
+      }
+    ],
+    "deepExplanations": [
+      {
+        "title": "أقسام وأنماط تعلم الآلة الثلاثة (Taxonomy of ML):",
+        "content": "1. Supervised Learning (التعلم الخاضع للإشراف): ندخل للنموذج بيانات تحتوي على المدخلات والنتائج المطلوبة مسبقاً (Features + Labels). ينقسم إلى:\n   - Regression (انحدار): عندما تكون القيمة المتوقعة رقماً مستمراً (مثل توقع أسعار المنازل أو درجات الحرارة).\n   - Classification (تصنيف): عندما تكون القيمة المتوقعة فئة محددة (مثل كشف البريد المزعج Spam vs Not Spam).\n2. Unsupervised Learning (غير الخاضع للإشراف): ندخل بيانات بدون تسميات أو نتائج (Features only)، ويكتشف النموذج البنية الذاتية لها (مثل خوارزمية K-Means لتجزئة السوق).\n3. Reinforcement Learning (التعلم التعزيزي): يتعلم الوكيل الذكي (Agent) اتخاذ القرارات في بيئة تفاعلية بتجربة الخطأ وتعظيم المكافآت (مثل تعليم الروبوتات المشي أو لعب الشطرنج)."
+      },
+      {
+        "title": "معضلة الـ Bias-Variance Tradeoff وكيفية معالجة Overfitting:",
+        "content": "• Overfitting (الإفراط في الملاءمة / حفظ التدريب):\n  - الأعراض: دقة 99% في التدريب ودقة 60% في الاختبار.\n  - السبب: تعقيد النموذج الزائد وحفظه للضوضاء (High Variance).\n  - الحلول البرمجية والأكاديمية:\n    1. استخدام تقنيات التنظيم (Regularization): مثل L1 Lasso (يحذف المعاملات غير المهمة) أو L2 Ridge (يقلص أوزان المتغيرات).\n    2. استخدام التحقق المتقاطع (K-Fold Cross-Validation) لضبط المعاملات الفائقة.\n    3. جمع المزيد من بيانات التدريب أو تطبيق تقنيات Data Augmentation.\n    4. تقليل عدد الخصائص وتطبيق خفض الأبعاد (Dimensionality Reduction via PCA)."
+      },
+      {
+        "title": "خوارزمية تناقص التدرج (Gradient Descent Optimization):",
+        "content": "• دالة التكلفة (Cost Function: J(w, b)): تقيس الفارق بين توقعات النموذج ŷ والقيم الحقيقية y (مثل Mean Squared Error في الانحدار الخطي).\n• التحديث التكراري للأوزان: w := w - α · (∂J / ∂w)\n• معدل التعلم (Learning Rate: α):\n  - إذا كان صغيراً جداً: يستغرق التدريب وقتاً طويلاً وبطيئاً للوصول للقاع.\n  - إذا كان كبيراً جداً: يتذبذب النموذج ويتجاوز القاع وقد يتباعد (Overshooting & Divergence)."
+      },
+      {
+        "title": "مقاييس تقييم النماذج من مصفوفة الالتباس (Confusion Matrix):",
+        "content": "• Accuracy (الدقة الإجمالية): (TP + TN) / Total. تكون مضللة إذا كانت البيانات غير متوازنة (Imbalanced Data).\n• Precision (الإحكام): TP / (TP + FP)؛ تقيس نسبة الحالات التي توقعها النموذج إيجابية وكانت فعلاً إيجابية (مهمة في كشف البريد المزعج).\n• Recall (الاسترجاع/الحساسية): TP / (TP + FN)؛ تقيس قدرة النموذج على التقاط كل الحالات الإيجابية الفعلية (حرجة جداً في تشخيص السرطان لتجنب الحالات السلبية الخاطئة).\n• F1-Score: المتوسط التوافقي بين Precision و Recall = 2 × (P × R) / (P + R)."
+      }
+    ],
+    "examTraps": [
+      "فخ دقة الـ Accuracy المضللة: إذا كان لدينا 990 مريضاً سليماً و 10 مصابين، فإن نموذجاً غبياً يتوقع أن الجميع سليمون سيحقق دقة 99% ولكنه كارثي! لذلك نستخدم Recall و F1-Score.",
+      "فخ التعلم الخاضع للإشراف: التنبؤ بقيمة رقمية مستمرة (كدرجة الحرارة) يسمى Regression وليس Classification.",
+      "فخ الـ Learning Rate (α): قيمة α الكبيرة جداً لا تسرع التعلم بل تتسبب في تباعد الخوارزمية (Divergence) وفشلها.",
+      "فخ تسريب البيانات (Data Leakage): استخدام بيانات الاختبار أثناء تدريب أو تطبيع بيانات النموذج يعطي نتائج مضللة ليلة الامتحان.",
+      "فخ لعنة الأبعاد (Curse of Dimensionality): إضافة خصائص جديدة دون بيانات كافية يزيد المسافات بين النقاط ويجعل النموذج أكثر عرضة للـ Overfitting."
+    ],
+    "quizQuestions": [
+      {
+        "id": 1,
+        "question": "عند تدريب نموذج وحقق دقة 99.5% على بيانات التدريب، لكنه انهار إلى دقة 58% على بيانات الاختبار، فإن النموذج يعاني من:",
+        "options": [
+          "Underfitting (نقص الملاءمة)",
+          "Overfitting (الإفراط في الملاءمة / تباين عالٍ)",
+          "نقص في عدد الخصائص",
+          "بطء في سرعة المعالج"
+        ],
+        "correctIndex": 1,
+        "explanation": "هذه هي الحالة الكلاسيكية للـ Overfitting: النموذج حفظ الضوضاء في بيانات التدريب وفشل تماماً في التعميم على البيانات الجديدة."
+      },
+      {
+        "id": 2,
+        "question": "في مهمة طبية حساسة للكشف عن الأورام السرطانية، ما هو المقياس الأكثر خطورة وأهمية الذي يجب زيادته لتجنب تشخيص مريض مصاب بأنه سليم؟",
+        "options": [
+          "Accuracy (الدقة الإجمالية)",
+          "Precision (الإحكام)",
+          "Recall / Sensitivity (الاسترجاع والحساسية)",
+          "Specificity"
+        ],
+        "correctIndex": 2,
+        "explanation": "في الطب، الخطأ الأكبر هو False Negative (توقع أن المصاب سليم)؛ ومقياس الـ Recall هو المسؤول عن تقليل الـ FN للحد الأدنى."
+      },
+      {
+        "id": 3,
+        "question": "ماذا يُقصد بمصطلح 'لعنة الأبعاد' (Curse of Dimensionality) في مقررات تعلم الآلة والذكاء الاصطناعي؟",
+        "options": [
+          "صعوبة رسم المخططات باليد",
+          "تزايد حجم الفضاء الهندسي بصورة أسية مع زيادة عدد الخصائص مما يجعل البيانات متفرقة (Sparse) وصعبة التعلم",
+          "عدم توفر شاشات عريضة",
+          "بطء تحميل ملفات البيانات"
+        ],
+        "correctIndex": 1,
+        "explanation": "كلما زادت الخصائص، يزداد حجم الفضاء وتتباعد البيانات بشكل أُسي مما يستدعي تقنيات خفض الأبعاد مثل PCA."
+      },
+      {
+        "id": 4,
+        "question": "ما هو التأثير الرياضي المباشر لاختيار معدل تعلم (Learning Rate: α) كبير جداً في خوارزمية Gradient Descent؟",
+        "options": [
+          "الوصول لقاع دالة التكلفة في ثانية واحدة",
+          "تذبذب خطوات التحديث وتجاوز القاع الأدنى وقد يؤدي إلى تباعد النموذج (Divergence)",
+          "تحول النموذج إلى تعلم غير خاضع للإشراف",
+          "تجميد أوزان النموذج تماماً"
+        ],
+        "correctIndex": 1,
+        "explanation": "المعدل الكبير جداً يجعل الخطوات واسعة فيقفز النموذج فوق النقطة الصغرى ويتذبذب بعيداً عنها."
+      },
+      {
+        "id": 5,
+        "question": "أي من الخوارزميات التالية تُصنف كخوارزمية تعلم خاضع للإشراف لمسائل التصنيف (Supervised Classification)؟",
+        "options": [
+          "K-Means Clustering",
+          "Apriori Algorithm",
+          "Decision Trees (أشجار القرار)",
+          "PCA (Principal Component Analysis)"
+        ],
+        "correctIndex": 2,
+        "explanation": "أشجار القرار (Decision Trees) هي خوارزمية تصنيف تنبؤية خاضعة للإشراف تعتمد على تقسيم البيانات وفقاً لأعلى كسب معلومات (Information Gain)."
+      },
+      {
+        "id": 6,
+        "question": "ما هو دور أساليب التسوية (Regularization) مثل L1 Lasso و L2 Ridge في تدريب نماذج الذكاء الاصطناعي؟",
+        "options": [
+          "زيادة عدد معاملات النموذج",
+          "معاقبة الأوزان الكبيرة وتقليل تعقيد النموذج للحد من مشكلة الـ Overfitting",
+          "حذف بيانات الاختبار",
+          "مضاعفة أوقات التدريب"
+        ],
+        "correctIndex": 1,
+        "explanation": "الـ Regularization تضيف حداً جزائياً لدالة التكلفة يمنع الأوزان من التضخم المفرط، مما يحافظ على بساطة النموذج وقدرته على التعميم."
+      },
+      {
+        "id": 7,
+        "question": "عند التنبؤ بأسعار المنازل بالجنيه المصري بناءً على المساحة وعدد الغرف، فإن هذه المهمة تندرج تحت:",
+        "options": [
+          "Regression (الانحدار التنبؤي)",
+          "Classification (التصنيف)",
+          "Clustering (العنقودية)",
+          "Reinforcement Learning"
+        ],
+        "correctIndex": 0,
+        "explanation": "الهدف هو التنبؤ برقم مالي مستمر (Continuous Variable) وليس فئات منفصلة، لذا تسمى انحداراً Regression."
+      },
+      {
+        "id": 8,
+        "question": "المقياس الإحصائي المسمى F1-Score يُعرف رياضياً بأنه:",
+        "options": [
+          "الفرق بين القيمة العظمى والصغرى",
+          "المتوسط التوافقي (Harmonic Mean) بين مقياسي Precision و Recall",
+          "مجموع الدقة مقسوماً على 100",
+          "نسبة البيانات غير المصنفة"
+        ],
+        "correctIndex": 1,
+        "explanation": "F1-Score هو المتوسط التوافقي لـ Precision و Recall: 2*(P*R)/(P+R)، وهو المقياس المثالي لتقييم النماذج في البيانات غير المتوازنة."
+      }
+    ],
+    "flashcards": [
+      {
+        "front": "Supervised Learning",
+        "back": "نمط تعلم تدرب فيه الآلة على أزواج من المدخلات والتسميات المستهدفة الصحيحة مسبقاً (X, y).",
+        "tag": "أنماط التعلم"
+      },
+      {
+        "front": "Unsupervised Learning",
+        "back": "نمط تعلم يستكشف فيه النموذج العلاقات والأنماط الكامنة في البيانات دون أي تسميات مسبقة.",
+        "tag": "أنماط التعلم"
+      },
+      {
+        "front": "Overfitting (الإفراط في الملاءمة)",
+        "back": "حفظ النموذج لتفاصيل وضوضاء بيانات التدريب بدقة تامة وفشله في التنبؤ على البيانات الجديدة.",
+        "tag": "تحديات النماذج"
+      },
+      {
+        "front": "Cost Function (دالة التكلفة)",
+        "back": "دالة رياضية تقيس مدى بعد توقعات النموذج عن الحقيقة، والهدف هو تقليل قيمتها للصفر تقريباً.",
+        "tag": "التحسين الرياضي"
+      },
+      {
+        "front": "Gradient Descent",
+        "back": "خوارزمية تحسين تكرارية لتعديل معاملات النموذج في الاتجاه المعاكس لتدرج دالة التكلفة للوصول للقاع.",
+        "tag": "التحسين الرياضي"
+      },
+      {
+        "front": "L2 Regularization (Ridge)",
+        "back": "تقنية لإضافة مربع الأوزان لدالة التكلفة لتقليص حجمها وتفادي الـ Overfitting دون تصفيرها كلياً.",
+        "tag": "تقنيات التسوية"
+      },
+      {
+        "front": "Confusion Matrix (مصفوفة الالتباس)",
+        "back": "جدول يقارن النتائج الفعلية بالمتوقعة (TP, TN, FP, FN) لاستخلاص مقاييس الدقة والاسترجاع.",
+        "tag": "تقييم النماذج"
+      },
+      {
+        "front": "Curse of Dimensionality",
+        "back": "صعوبة تدريب النماذج وظاهرة التناثر الشديد للبيانات عند زيادة عدد الخصائص بالنسبة لحجم العينات.",
+        "tag": "هندسة الخصائص"
+      }
+    ]
+  }
+];
+
+    function PlatformCore() {
+      // Theme State (Dark / Light)
+      const [theme, setTheme] = useState(() => {
+        try { return localStorage.getItem('zubda_theme') || 'dark'; } catch(e) { return 'dark'; }
+      });
+
+      const toggleTheme = () => {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+        try { localStorage.setItem('zubda_theme', next); } catch(e) {}
+      };
+
+      useEffect(() => {
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }, [theme]);
+
+      const [currentView, setCurrentView] = useState('home');
+      const [openedTabs, setOpenedTabs] = useState(['or', 'networks']);
+      const [courseSubTab, setCourseSubTab] = useState('files');
+      const [searchQuery, setSearchQuery] = useState('');
+
+      // Document Viewer Modal State
+      const [viewerFile, setViewerFile] = useState(null);
+
+      // Visitor & Profile
+      const [visitorName, setVisitorName] = useState(() => {
+        try { return localStorage.getItem('zubda_visitor_name') || ''; } catch (e) { return ''; }
+      });
+      const [showNameModal, setShowNameModal] = useState(() => {
+        try { return !localStorage.getItem('zubda_visitor_name'); } catch (e) { return false; }
+      });
+      const [nameInput, setNameInput] = useState('');
+
+      // Gamification
+      const [streakDays, setStreakDays] = useState(5);
+      const [totalXp, setTotalXp] = useState(640);
+      const [level, setLevel] = useState(3);
+      const [soundEnabled, setSoundEnabled] = useState(true);
+      const [showAchievements, setShowAchievements] = useState(false);
+      const [achievements, setAchievements] = useState(() => {
+        try {
+          const saved = localStorage.getItem('zubda_achievements');
+          return saved ? JSON.parse(saved) : {
+            firstQuiz: true,
+            pomodoroMaster: false,
+            perfectScore: false,
+            aiInquirer: false,
+            cardMaster: false,
+            honorStudent: false
+          };
+        } catch(e) {
+          return {};
+        }
+      });
+
+      // Pomodoro Timer State
+      const [showTimerModal, setShowTimerModal] = useState(false);
+      const [timerSeconds, setTimerSeconds] = useState(25 * 60);
+      const [isTimerRunning, setIsTimerRunning] = useState(false);
+      const timerRef = useRef(null);
+
+      // Quiz & Cards
+      const [quizAnswers, setQuizAnswers] = useState({});
+      const [quizSubmitted, setQuizSubmitted] = useState(false);
+      const [quizScore, setQuizScore] = useState(null);
+      const [cardIdx, setCardIdx] = useState(0);
+      const [isFlipped, setIsFlipped] = useState(false);
+
+      // LP Sandbox State (for OR)
+      const [lpX1, setLpX1] = useState(20);
+      const [lpX2, setLpX2] = useState(25);
+
+      // AI Assistant State
+      const [isAiOpen, setIsAiOpen] = useState(false);
+      const [aiInput, setAiInput] = useState('');
+      const [isAiThinking, setIsAiThinking] = useState(false);
+      const [aiMessages, setAiMessages] = useState([
+        {
+          id: 1,
+          sender: 'bot',
+          text: 'أهلاً بك. أنا رفيقك الأكاديمي الذكي لكلية الذكاء الاصطناعي. يمكنك فتح ملازم ومحاضرات المقررات أونلاين، أو سؤالي عن أي مسألة أو كويز وسأشرحها لك فوراً.',
+          time: 'الآن'
+        }
+      ]);
+
+      const [toastMessage, setToastMessage] = useState(null);
+
+      // Document URL Helpers for Online Viewing
+      const getViewerUrl = (file) => {
+        if (!file) return '';
+        try {
+          if (window.location.protocol.startsWith('http')) {
+            const absoluteUrl = new URL(file.path, window.location.href).href;
+            if (file.type === 'PDF') {
+              return absoluteUrl;
+            }
+            return `https://docs.google.com/viewer?url=${encodeURIComponent(absoluteUrl)}&embedded=true`;
+          }
+          return file.path;
+        } catch (e) {
+          return file.path;
+        }
+      };
+
+      const openOnline = (file) => {
+        if (!file) return;
+        try {
+          if (window.location.protocol.startsWith('http')) {
+            const absoluteUrl = new URL(file.path, window.location.href).href;
+            if (file.type === 'PDF') {
+              window.open(absoluteUrl, '_blank');
+            } else {
+              window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(absoluteUrl)}`, '_blank');
+            }
+          } else {
+            // Running offline locally
+            setViewerFile(file);
+          }
+        } catch(e) {
+          window.open(file.path, '_blank');
+        }
+      };
+
+      // Sound Synthesizer (Pure Web Audio API - Zero External Files)
+      const playSound = (type) => {
+        if (!soundEnabled) return;
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          if (type === 'correct') {
+            osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+            osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.25);
+          } else if (type === 'levelUp') {
+            osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+            osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.09);
+            osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.18);
+            osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.27);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.45);
+          } else if (type === 'cardFlip') {
+            osc.frequency.setValueAtTime(340, ctx.currentTime);
+            gain.gain.setValueAtTime(0.05, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.07);
+          }
+        } catch(e) {}
+      };
+
+      const triggerToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3000);
+      };
+
+      const addXp = (amount, reason) => {
+        setTotalXp(prev => {
+          const next = prev + amount;
+          triggerToast(`+${amount} نقطة XP (${reason})`);
+          if (Math.floor(next / 500) > Math.floor(prev / 500)) {
+            setLevel(l => l + 1);
+            playSound('levelUp');
+            triggerToast(`تهانينا! ارتقيت إلى المستوى ${level + 1}`);
+            unlockAchievement('honorStudent');
+          }
+          return next;
+        });
+      };
+
+      const unlockAchievement = (key) => {
+        setAchievements(prev => {
+          if (prev[key]) return prev;
+          const next = { ...prev, [key]: true };
+          try { localStorage.setItem('zubda_achievements', JSON.stringify(next)); } catch(e) {}
+          playSound('levelUp');
+          triggerToast(`وسام إنجاز جديد تم فتحه!`);
+          return next;
+        });
+      };
+
+      // Pomodoro Timer Effect
+      useEffect(() => {
+        if (isTimerRunning) {
+          timerRef.current = setInterval(() => {
+            setTimerSeconds(prev => {
+              if (prev <= 1) {
+                clearInterval(timerRef.current);
+                setIsTimerRunning(false);
+                playSound('levelUp');
+                addXp(50, 'جلسة تركيز كاملة');
+                unlockAchievement('pomodoroMaster');
+                if (typeof confetti === 'function') confetti({ particleCount: 70, spread: 60 });
+                triggerToast('أحسنت! أتممت جلسة التركيز (25 دقيقة) بنجاح');
+                return 25 * 60;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        } else {
+          clearInterval(timerRef.current);
+        }
+        return () => clearInterval(timerRef.current);
+      }, [isTimerRunning]);
+
+      const formatTime = (sec) => {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      };
+
+      const handleSaveVisitorName = (e) => {
+        if (e) e.preventDefault();
+        const finalName = (nameInput || '').trim() || 'زميل دراسي';
+        setVisitorName(finalName);
+        try { localStorage.setItem('zubda_visitor_name', finalName); } catch(e) {}
+        setShowNameModal(false);
+        playSound('correct');
+        triggerToast(`مرحباً بك يا ${finalName}. نتمنى لك مذاكرة مثمرة`);
+      };
+
+      const handleSkipName = () => {
+        const guestName = 'زميل دراسي';
+        setVisitorName(guestName);
+        try { localStorage.setItem('zubda_visitor_name', guestName); } catch(e) {}
+        setShowNameModal(false);
+        triggerToast('مرحباً بك. يمكنك تعديل اسمك في أي وقت من أعلى الصفحة');
+      };
+
+      const handleOpenCourse = (courseId, subTab = 'files') => {
+        if (!openedTabs.includes(courseId)) {
+          setOpenedTabs([...openedTabs, courseId]);
+        }
+        setCurrentView(courseId);
+        setCourseSubTab(subTab);
+        setQuizSubmitted(false);
+        setQuizAnswers({});
+        setCardIdx(0);
+        setIsFlipped(false);
+      };
+
+      const handleCloseTab = (e, tabId) => {
+        e.stopPropagation();
+        const nextTabs = openedTabs.filter(id => id !== tabId);
+        setOpenedTabs(nextTabs);
+        if (currentView === tabId) {
+          setCurrentView(nextTabs.length > 0 ? nextTabs[nextTabs.length - 1] : 'home');
+        }
+      };
+
+      const activeCourse = deltaCourses.find(c => c.id === currentView);
+      const avgReadiness = Math.round(
+        deltaCourses.reduce((acc, c) => acc + c.readiness, 0) / deltaCourses.length
+      );
+
+      // Filtered courses for search
+      const filteredCourses = deltaCourses.filter(c => {
+        if (!searchQuery.trim()) return true;
+        const q = searchQuery.toLowerCase();
+        return c.title.toLowerCase().includes(q) ||
+               c.code.toLowerCase().includes(q) ||
+               c.subtitle.toLowerCase().includes(q);
+      });
+
+      // AI Chat Engine
+      const generateAiReply = (query, currentCourse) => {
+        const q = query.toLowerCase();
+
+        if (q.includes('ملف') || q.includes('سلايد') || q.includes('محاضرة') || q.includes('شيت') || q.includes('تحميل')) {
+          if (currentCourse && currentCourse.files) {
+            return `الملفات والملازم المرفقة أونلاين لمقرر ${currentCourse.title}:
+${currentCourse.files.map((f, i) => `${i + 1}. [${f.type}] ${f.title} (${f.size})`).join('\n')}
+يمكنك النقر على زر "عرض أونلاين" لقراءة السلايدات والشيتات مباشرة في المتصفح دون الحاجة لتحميلها!`;
+          }
+          return `جميع ملفات المقررات (سلايدات وشيتات) متاحة للعرض المباشر أونلاين وتحميلها في تبويب "الملفات والملازم" داخل كل مادة.`;
+        }
+
+        if (q.includes('سيمبلكس') || q.includes('simplex')) {
+          return `خوارزمية السيمبلكس (Simplex Algorithm):
+1. الصورة القياسية (Standard Form): تحويل المتباينات (≤) إلى معادلات بإضافة متغيرات راكدة (Slack: S1, S2).
+2. جدول البداية (Initial Tableau): وضع المعاملات في الجدول، والحل المبدئي هو (X1=0, X2=0) مع بقاء متغيرات الـ Slack كأساس.
+3. عمود المحور (Pivot Column): اختيار المتغير صاحب القيمة الأكثر سلبية في صف Z لتعظيم الربح.
+4. صف المحور (Pivot Row): قسمة عمود الثوابت (RHS) على عناصر عمود المحور الموجبة، واختيار أصغر نسبة موجبة لتحديد المتغير الخارج.
+5. العمليات الصفية البسيطة: جعل عنصر التقاطع 1 وباقي عناصر العمود أصفاراً، والتكرار حتى تختفي السوالب من صف Z.`;
+        }
+
+        if (q.includes('برمجة خطية') || q.includes('lp') || q.includes('قيود')) {
+          return `أركان نموذج البرمجة الخطية (Linear Programming):
+1. متغيرات القرار (Decision Variables): المجاهيل المطلوب حساب قيمتها المثلى (مثل X1, X2).
+2. دالة الهدف (Objective Function): إما تعظيم أرباح (Maximize Z) أو تدنية تكاليف وزمن (Minimize Z).
+3. القيود الهيكلية (Constraints): حدود الموارد المتاحة من ساعات تشغيل ومواد خام وميزانية.
+4. قيد عدم السلبية (Non-negativity): شرط حتمي (X1, X2 ≥ 0) لأن كميات الإنتاج الحقيقية لا تكون سالبة.`;
+        }
+
+        if (q.includes('tcp') || q.includes('udp')) {
+          return `مقارنة عملية بين بروتوكولي النقل TCP و UDP:
+• TCP (Transmission Control Protocol):
+  - موجه بالاتصال (Connection-Oriented) بمصافحة ثلاثية (3-Way Handshake).
+  - موثوق بالكامل ويضمن تسليم الحزم بالترتيب دون فقدان (Reliable).
+  - الاستخدام: تصفح الويب (HTTP/S)، البريد الإلكتروني، ونقل الملفات.
+• UDP (User Datagram Protocol):
+  - غير موجه بالاتصال وبدون مصافحة (Connectionless).
+  - سريع جداً ولا يعيد إرسال الحزم الضائعة (Best-effort).
+  - الاستخدام: البث المباشر (Streaming)، مكالمات الصوت والفيديو، والألعاب عبر الشبكة.`;
+        }
+
+        if (q.includes('osi') || q.includes('طبقات')) {
+          return `نموذج الطبقات السبع (OSI 7 Layers) من أسفل لأعلى:
+1. Physical: الإشارات والأسلاك والبتات (Bits).
+2. Data Link: العنونة الفيزيائية MAC والتحكم بالأخطاء (Frames) مثل السويتش.
+3. Network: العنونة المنطقية IP والتوجيه (Packets) مثل الراوتر.
+4. Transport: نقل البيانات من طرف لطرف مع إدارة الاتصال (TCP/UDP Segments).
+5. Session: إدارة وفتح الجلسات بين البرمجيات.
+6. Presentation: التشفير وضغط البيانات والتنسيق (Data Formatting/TLS).
+7. Application: الواجهة المباشرة للمستخدم وتطبيقاته (HTTP, DNS, SMTP).`;
+        }
+
+        if (q.includes('overfitting') || q.includes('إفراط') || q.includes('underfitting')) {
+          return `مقارنة بين الـ Overfitting والـ Underfitting في تعلم الآلة:
+• Overfitting (الإفراط في الملاءمة):
+  - النموذج حفظ بيانات التدريب بما فيها من ضوضاء وفشل في التعميم على البيانات الجديدة (High Variance).
+  - الحل: زيادة حجم البيانات، استخدام Regularization (L1/L2)، وتقليل الخصائص غير الضرورية.
+• Underfitting (نقص الملاءمة):
+  - النموذج بسيط جداً ولم يستطع استيعاب العلاقات الكامنة في البيانات (High Bias).
+  - الحل: استخدام خوارزمية أكثر كفاءة وإضافة ميزات (Features) أكثر دلالة.`;
+        }
+
+        if (q.includes('kdd') || q.includes('تنقيب') || q.includes('خطوات')) {
+          return `مراحل دورة حياة اكتشاف المعرفة (KDD Steps):
+1. Selection: تحديد واختيار البيانات المستهدفة.
+2. Preprocessing: تنظيف البيانات ومعالجة القيم المفقودة والشاذة (Noise & Outliers).
+3. Transformation: تهيئة وتطبيع البيانات (Normalization & Aggregation).
+4. Data Mining: تطبيق الخوارزميات (تصنيف، عنقدة، قواعد اقتران).
+5. Evaluation / Interpretation: تقييم الأنماط المكتشفة واتخاذ القرارات الاستراتيجية.`;
+        }
+
+        if (q.includes('k-map') || q.includes('كارنوف') || q.includes('بوابات') || q.includes('منطق')) {
+          return `قواعد تبسيط الدوائر المنطقية بمخطط كارنوف (K-Map):
+1. تجميع الآحاد (1s) في مجموعات من مضاعفات العدد 2 (1، 2، 4، 8، 16).
+2. التجميع يكون مستطيلاً أو مربعاً فقط.
+3. خاصية الالتفاف (Wrapping): حواف الجدول وأركانه الأربعة متجاورة منطقياً.
+4. كلما كبرت المجموعة، قل عدد المتغيرات في الحد المبسط الناتج.
+5. أي متغير تتغير قيمته بين 0 و 1 داخل المجموعة نفسها يتم حذفه تلقائياً.`;
+        }
+
+        return `شكراً لسؤالك الأكاديمي.
+بصفتي المساعد الذكي لمقررات Level 2 بكلية الذكاء الاصطناعي، يمكنك سؤالي بالتفصيل عن:
+- فتح وتحميل ملازم وسلايدات المحاضرات والشيتات أونلاين.
+- طريقة صياغة نماذج البرمجة الخطية وحل السيمبلكس (OR).
+- طبقات الشبكات السبع (OSI) وحسابات الـ Subnetting.
+- مراحل تنقيب البيانات وخوارزميات المعالجة المسبقة (Data Mining).
+- تبسيط خرائط كارنوف (K-Maps) والتصميم المنطقي (Digital Logic).
+- معالجة مشاكل Overfitting وتدريب نماذج تعلم الآلة (ML).`;
+      };
+
+      const handleSendAiMessage = () => {
+        if (!aiInput.trim()) return;
+        const textToSend = aiInput.trim();
+        const userMsg = {
+          id: Date.now(),
+          sender: 'user',
+          text: textToSend,
+          time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setAiMessages(prev => [...prev, userMsg]);
+        setAiInput('');
+        setIsAiThinking(true);
+
+        setTimeout(() => {
+          const replyText = generateAiReply(textToSend, activeCourse);
+          const botMsg = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: replyText,
+            time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+          };
+          setAiMessages(prev => [...prev, botMsg]);
+          setIsAiThinking(false);
+          playSound('correct');
+        }, 350);
+      };
+
+      // Quiz Submit
+      const handleQuizSubmit = () => {
+        if (!activeCourse) return;
+        const total = activeCourse.quizQuestions.length;
+        let score = 0;
+        activeCourse.quizQuestions.forEach((q, idx) => {
+          if (quizAnswers[idx] === q.correctIndex) {
+            score++;
+          }
+        });
+        setQuizScore(score);
+        setQuizSubmitted(true);
+        const percent = Math.round((score / total) * 100);
+        addXp(score * 15, 'كويز تفاعلي');
+
+        unlockAchievement('firstQuiz');
+        if (percent === 100) {
+          unlockAchievement('perfectScore');
+          playSound('levelUp');
+          if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 75 });
+        } else {
+          playSound('correct');
+        }
+      };
+
+      return (
+        <div dir="rtl" className={`min-h-screen font-sans pb-20 selection:bg-emerald-600 selection:text-white transition-colors duration-200 ${
+          theme === 'dark' ? 'dark bg-[#0B1120] text-slate-100' : 'bg-slate-50 text-slate-900'
+        }`}>
+          {/* Toast Notification */}
+          {toastMessage && (
+            <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 backdrop-blur-md border border-emerald-400/30 text-xs sm:text-sm font-semibold animate-bounce">
+              <span className="w-2 h-2 rounded-full bg-white"></span>
+              <span>{toastMessage}</span>
+            </div>
+          )}
+
+          {/* Top Universal Navigation Bar */}
+          <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+              <div className="flex items-center justify-between gap-3">
+                {/* Logo & Brand */}
+                <div 
+                  onClick={() => setCurrentView('home')}
+                  className="flex items-center gap-3 cursor-pointer group shrink-0"
+                >
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-bold shadow-md shadow-emerald-600/20 text-base group-hover:scale-105 transition-transform">
+                    ZD
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">زُبدة</span>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                        مقررات DELTA
+                      </span>
+                    </div>
+                    <p className="hidden sm:block text-[11px] text-slate-500 dark:text-slate-400 font-medium">كلية الذكاء الاصطناعي • Level 2</p>
+                  </div>
+                </div>
+
+                {/* Controls & Theme Switcher */}
+                <div className="flex items-center gap-2 text-xs font-semibold flex-wrap justify-end">
+                  {/* Theme Toggle (Dark / Light) */}
+                  <button
+                    onClick={toggleTheme}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 transition-all shadow-sm"
+                    title={theme === 'dark' ? 'التحويل إلى الوضع النهاري' : 'التحويل إلى الوضع الليلي'}
+                  >
+                    <span>{theme === 'dark' ? '☀️' : '🌙'}</span>
+                    <span className="hidden sm:inline text-[11px]">{theme === 'dark' ? 'نهاري' : 'ليلي'}</span>
+                  </button>
+
+                  {/* Pomodoro Timer Button */}
+                  <button
+                    onClick={() => setShowTimerModal(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-amber-700 dark:text-amber-400 transition-all shadow-sm"
+                    title="مؤقت المذاكرة بومودورو"
+                  >
+                    <span>⏱</span>
+                    <span className="font-mono text-xs font-bold">{formatTime(timerSeconds)}</span>
+                  </button>
+
+                  {/* Sound Toggle */}
+                  <button
+                    onClick={() => {
+                      setSoundEnabled(!soundEnabled);
+                      triggerToast(soundEnabled ? 'تم كتم الصوت' : 'تم تفعيل الصوت');
+                    }}
+                    className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-colors"
+                    title="تشغيل/كتم الصوت"
+                  >
+                    <span>{soundEnabled ? '🔊' : '🔇'}</span>
+                  </button>
+
+                  {/* Achievements Badge */}
+                  <button
+                    onClick={() => setShowAchievements(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-800 dark:text-amber-300 transition-all shadow-sm"
+                  >
+                    <span>🏅</span>
+                    <span className="hidden md:inline text-[11px]">الأوسمة</span>
+                  </button>
+
+                  {/* XP & Streak Indicator */}
+                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 dark:text-emerald-400">
+                    <span className="font-bold text-xs">{totalXp} XP</span>
+                    <span className="text-slate-400">|</span>
+                    <span className="text-[11px]">مستوى {level}</span>
+                  </div>
+
+                  {/* Visitor Badge */}
+                  <button
+                    onClick={() => setShowNameModal(true)}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 transition-colors"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span className="max-w-[80px] sm:max-w-[110px] truncate text-[11px] font-medium">
+                      {visitorName || 'طالب زائر'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Browser Tabs Row */}
+            <div className="bg-slate-100/90 dark:bg-[#0B1120]/80 border-t border-slate-200 dark:border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto flex items-center gap-1.5 no-scrollbar">
+              <button
+                onClick={() => setCurrentView('home')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  currentView === 'home'
+                    ? 'bg-white text-emerald-700 dark:bg-slate-800 dark:text-emerald-400 border border-slate-200 dark:border-emerald-500/30 shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/40'
+                }`}
+              >
+                <span>الرئيسية</span>
+                <span className="text-[10px] font-mono bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded-md text-slate-700 dark:text-slate-300">
+                  {deltaCourses.length}
+                </span>
+              </button>
+
+              <div className="h-4 w-px bg-slate-300 dark:bg-slate-800 mx-1"></div>
+
+              {openedTabs.map(tabId => {
+                const course = deltaCourses.find(c => c.id === tabId);
+                if (!course) return null;
+                const isActive = currentView === tabId;
+                return (
+                  <div
+                    key={tabId}
+                    onClick={() => setCurrentView(tabId)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap cursor-pointer transition-all border ${
+                      isActive
+                        ? 'bg-white text-emerald-700 dark:bg-slate-800 dark:text-emerald-400 border-slate-200 dark:border-emerald-500/30 shadow-sm'
+                        : 'bg-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:bg-slate-200/50 dark:hover:bg-slate-800/40'
+                    }`}
+                  >
+                    <span>{course.code}</span>
+                    <span className="hidden sm:inline font-normal text-[11px] text-slate-500 dark:text-slate-400">
+                      {course.title.split('(')[0]}
+                    </span>
+                    <button
+                      onClick={(e) => handleCloseTab(e, tabId)}
+                      className="p-0.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                      title="إغلاق التبويب"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </header>
+
+          {/* MAIN CONTENT CONTAINER */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+            {currentView === 'home' ? (
+              /* ================== HOME VIEW ================== */
+              <div className="space-y-8 animate-fadeIn">
+                {/* Modern Hero / Academic Hub Banner */}
+                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-600 to-slate-900 text-white p-6 sm:p-10 shadow-xl border border-emerald-500/20">
+                  <div className="relative z-10 max-w-3xl space-y-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span>الفصل الدراسي الحالي • المستوى الثاني AI</span>
+                    </div>
+
+                    <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-snug">
+                      أهلاً بك {visitorName ? `يا ${visitorName}` : ''} في منصة زُبدة الأكاديمية
+                    </h1>
+
+                    <p className="text-sm sm:text-base text-slate-100 leading-relaxed font-normal">
+                      مرجعك الجامعي الشامل لمقررات كلية الذكاء الاصطناعي بجامعة الدلتا. جميع ملفات المحاضرات والشيتات الأصلية متوفرة للعرض المباشر أونلاين والتحميل السريع، مع شروحات مبسطة وبنك أسئلة امتحانية.
+                    </p>
+
+                    {/* Quick Stats Badges */}
+                    <div className="pt-2 flex flex-wrap gap-2.5 sm:gap-4 text-xs font-semibold">
+                      <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
+                        <span className="text-emerald-400 font-bold">5</span>
+                        <span className="text-slate-200">مقررات تخصصية</span>
+                      </div>
+                      <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
+                        <span className="text-teal-300 font-bold">7</span>
+                        <span className="text-slate-200">ملازم وسلايدات أونلاين</span>
+                      </div>
+                      <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
+                        <span className="text-amber-300 font-bold">25</span>
+                        <span className="text-slate-200">كورساً عالمياً مجانياً</span>
+                      </div>
+                      <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
+                        <span className="text-blue-300 font-bold">40</span>
+                        <span className="text-slate-200">سؤال كويز مع التعليل</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Search & Filter Bar */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="relative w-full sm:w-96">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="ابحث عن مقرر، كود، أو موضوع..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 shadow-sm transition-colors"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute left-3 top-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                      >
+                        مسح
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs font-semibold self-end sm:self-auto">
+                    <span className="text-slate-500 dark:text-slate-400">المقررات المعروضة:</span>
+                    <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-500/20">
+                      {filteredCourses.length} مواد
+                    </span>
+                  </div>
+                </div>
+
+                {/* Course Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {filteredCourses.map((c) => (
+                    <div
+                      key={c.id}
+                      className="group flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 p-5 hover:border-emerald-500/50 hover:shadow-lg dark:hover:shadow-emerald-950/20 transition-all duration-200"
+                    >
+                      <div className="space-y-4">
+                        {/* Course Header */}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                              {c.icon}
+                            </span>
+                            <div>
+                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                                {c.code}
+                              </span>
+                              <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                                {c.title}
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Subtitle / Description */}
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                          {c.subtitle}
+                        </p>
+
+                        {/* Files Attached Preview */}
+                        <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+                          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                            <span>الملازم المرفقة أونلاين:</span>
+                            <span className="text-emerald-700 dark:text-emerald-400 font-semibold">{c.files.length} ملفات جاهزة</span>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1.5">
+                            {c.files.map((f, fi) => (
+                              <span
+                                key={fi}
+                                className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                                  f.type === 'PDF'
+                                    ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20'
+                                    : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20'
+                                }`}
+                              >
+                                {f.type}: {f.filename}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div className="space-y-1 pt-1">
+                            <div className="flex justify-between text-[11px]">
+                              <span className="text-slate-500 dark:text-slate-400 font-medium">مستوى الجاهزية والاستيعاب:</span>
+                              <span className="font-bold text-emerald-700 dark:text-emerald-400">{c.readiness}%</span>
+                            </div>
+                            <div className="w-full h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full"
+                                style={{ width: `${c.readiness}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-2">
+                        <button
+                          onClick={() => handleOpenCourse(c.id, 'files')}
+                          className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm transition-all text-center"
+                        >
+                          الملازم والشرح
+                        </button>
+                        <button
+                          onClick={() => handleOpenCourse(c.id, 'quiz')}
+                          className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors border border-slate-200 dark:border-slate-700"
+                          title="الكويز السريع"
+                        >
+                          كويز
+                        </button>
+                        <button
+                          onClick={() => handleOpenCourse(c.id, 'courses')}
+                          className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs transition-colors border border-slate-200 dark:border-slate-700"
+                          title="الكورسات المجانية"
+                        >
+                          كورسات
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Quick Academic Toolkit Bar */}
+                <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-sm">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="space-y-1 text-center md:text-right">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                        مختبر بحوث العمليات والبرمجة الخطية التفاعلي (Simplex Sandbox)
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        جرب تغيير قيم متغيرات القرار X1 و X2 في الوقت الحقيقي وشاهد حسابات دالة الربح Z وتحقق القيود فورياً.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleOpenCourse('or', 'sandbox')}
+                      className="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold transition-colors whitespace-nowrap shadow-sm"
+                    >
+                      تجربة المختبر الآن
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* ================== COURSE VIEW ================== */
+              activeCourse && (
+                <div className="space-y-6 animate-fadeIn">
+                  {/* Course Header Banner */}
+                  <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-3.5">
+                        <span className="text-3xl p-3 rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                          {activeCourse.icon}
+                        </span>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-lg border border-emerald-500/20">
+                              {activeCourse.code}
+                            </span>
+                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                              {activeCourse.instructor}
+                            </span>
+                          </div>
+                          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
+                            {activeCourse.title}
+                          </h2>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-start sm:self-auto">
+                        <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                          {activeCourse.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                      {activeCourse.subtitle}
+                    </p>
+
+                    {/* Quick Access to Online Files */}
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                      <span className="text-slate-500 dark:text-slate-400 font-medium">الملفات والملازم الأصلية:</span>
+                      {activeCourse.files.map((file, i) => (
+                        <button
+                          key={i}
+                          onClick={() => openOnline(file)}
+                          className={`px-3 py-1.5 rounded-xl border text-[11px] font-semibold flex items-center gap-1.5 transition-all hover:scale-102 ${
+                            file.type === 'PDF'
+                              ? 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-500/30'
+                              : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30'
+                          }`}
+                          title="انقر لفتح الملف أونلاين"
+                        >
+                          <span className="font-bold">[{file.type}]</span>
+                          <span>{file.title.split(':')[0]}</span>
+                          <span className="font-mono opacity-70">({file.size})</span>
+                          <span>↗</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sub-tabs Navigation */}
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-200/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar text-xs font-semibold">
+                    <button
+                      onClick={() => setCourseSubTab('files')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'files'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      الملفات والملازم الأصلية أونلاين ({activeCourse.files.length})
+                    </button>
+
+                    <button
+                      onClick={() => setCourseSubTab('summary')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'summary'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      الشرح والملخص التفصيلي
+                    </button>
+
+                    <button
+                      onClick={() => setCourseSubTab('quiz')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'quiz'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      بنك الأسئلة والكويز ({activeCourse.quizQuestions.length})
+                    </button>
+
+                    <button
+                      onClick={() => setCourseSubTab('flashcards')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'flashcards'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      بطاقات الاستذكار ({activeCourse.flashcards?.length || 0})
+                    </button>
+
+                    <button
+                      onClick={() => setCourseSubTab('courses')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'courses'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      الكورسات المجانية المعتمدة ({activeCourse.onlineCourses?.length || 0})
+                    </button>
+
+                    <button
+                      onClick={() => setCourseSubTab('traps')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'traps'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      فخاخ الامتحانات ({activeCourse.examTraps?.length || 0})
+                    </button>
+
+                    {activeCourse.id === 'or' && (
+                      <button
+                        onClick={() => setCourseSubTab('sandbox')}
+                        className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                          courseSubTab === 'sandbox'
+                            ? 'bg-teal-600 text-white shadow-sm'
+                            : 'text-teal-700 dark:text-teal-400 hover:bg-teal-500/10'
+                        }`}
+                      >
+                        مختبر السيمبلكس
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Sub-tab: Official Course Files (Online Viewing & Downloading) */}
+                  {courseSubTab === 'files' && (
+                    <div className="space-y-6">
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            الملازم وسلايدات المحاضرات الرسمية
+                          </h3>
+                          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            جاهزة للعرض أونلاين والتحميل المباشر
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          تم تضمين الملفات الأصلية بالكامل في حزمة الموقع. يمكنك فتحها مباشرة في المتصفح عبر عارض Google Docs / PDF دون الحاجة لتثبيت برامج Office، أو تحميلها بضغطة زر.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {activeCourse.files.map((file, idx) => (
+                          <div
+                            key={idx}
+                            className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4 flex flex-col justify-between hover:border-emerald-500/40 transition-all"
+                          >
+                            <div className="space-y-2.5">
+                              <div className="flex items-center justify-between">
+                                <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${
+                                  file.type === 'PDF'
+                                    ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                                    : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20'
+                                }`}>
+                                  {file.type}
+                                </span>
+                                <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                                  {file.size}
+                                </span>
+                              </div>
+
+                              <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                                {file.title}
+                              </h4>
+
+                              <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 break-all">
+                                {file.filename}
+                              </p>
+                            </div>
+
+                            <div className="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                              <button
+                                onClick={() => openOnline(file)}
+                                className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                              >
+                                <span>عرض أونلاين</span>
+                                <span>↗</span>
+                              </button>
+
+                              <a
+                                href={file.path}
+                                download={file.filename}
+                                className="py-2 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700"
+                                title="تحميل الملف على جهازك"
+                              >
+                                <span>تحميل</span>
+                                <span>📥</span>
+                              </a>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab: Summary & Micro-Learning */}
+                  {courseSubTab === 'summary' && (
+                    <div className="space-y-6">
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            {activeCourse.activeChapter}
+                          </h3>
+                        </div>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                          يركز هذا الجزء على استيعاب المفاهيم الهيكلية والرياضية الأساسية وربطها بالتطبيقات البرمجية والامتحانات العملية.
+                        </p>
+                      </div>
+
+                      {/* Detailed Learning Modules */}
+                      {activeCourse.deepExplanations && (
+                        <div className="space-y-4">
+                          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                            <span>الشرح التفصيلي خطوة بخطوة</span>
+                            <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400">
+                              (تفكيك المفاهيم الرياضية والمنطقية)
+                            </span>
+                          </h3>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {activeCourse.deepExplanations.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-3"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-400">
+                                    {item.topic}
+                                  </h4>
+                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                                    وحدة {idx + 1}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line font-normal">
+                                  {item.content}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Summary Points List */}
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                          النقاط الجوهرية للاستذكار السريع
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {activeCourse.summaryPoints.map((point, idx) => (
+                            <div
+                              key={idx}
+                              className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1"
+                            >
+                              <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                                {point.title}
+                              </h5>
+                              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                                {point.desc}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab: Quiz */}
+                  {courseSubTab === 'quiz' && (
+                    <div className="space-y-6">
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            اختبار الاستيعاب والفهم الأكاديمي
+                          </h3>
+                          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            {activeCourse.quizQuestions.length} أسئلة مع التعليل
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">
+                          أجب عن الأسئلة واضغط "اعتماد الإجابات" للحصول على تقييم درجاتك مع التفسير العلمي لكل اختيار.
+                        </p>
+                      </div>
+
+                      {/* Questions List */}
+                      <div className="space-y-5">
+                        {activeCourse.quizQuestions.map((q, qIdx) => {
+                          const isAnswered = quizAnswers[qIdx] !== undefined;
+                          const selected = quizAnswers[qIdx];
+                          const isCorrect = selected === q.correctIndex;
+
+                          return (
+                            <div
+                              key={q.id}
+                              className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-sm space-y-4"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 leading-relaxed">
+                                  <span className="text-emerald-700 dark:text-emerald-400 font-mono ml-2">[{qIdx + 1}]</span>
+                                  {q.question}
+                                </h4>
+                                {quizSubmitted && (
+                                  <span className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg ${
+                                    isCorrect
+                                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+                                      : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30'
+                                  }`}>
+                                    {isCorrect ? 'صحيحة ✓' : 'غير صحيحة ✕'}
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Options */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                {q.options.map((opt, optIdx) => {
+                                  let btnStyle = 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700';
+
+                                  if (quizSubmitted) {
+                                    if (optIdx === q.correctIndex) {
+                                      btnStyle = 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold';
+                                    } else if (selected === optIdx && !isCorrect) {
+                                      btnStyle = 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-800 dark:text-rose-300';
+                                    } else {
+                                      btnStyle = 'opacity-50 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500';
+                                    }
+                                  } else if (selected === optIdx) {
+                                    btnStyle = 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold shadow-sm';
+                                  }
+
+                                  return (
+                                    <button
+                                      key={optIdx}
+                                      disabled={quizSubmitted}
+                                      onClick={() => {
+                                        setQuizAnswers({ ...quizAnswers, [qIdx]: optIdx });
+                                        playSound('correct');
+                                      }}
+                                      className={`p-3 rounded-xl border text-right text-xs leading-relaxed transition-all flex items-center justify-between ${btnStyle}`}
+                                    >
+                                      <span>{opt}</span>
+                                      <span className="font-mono text-[10px] text-slate-400 ml-2">
+                                        {String.fromCharCode(65 + optIdx)}
+                                      </span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Rationale / Explanation */}
+                              {quizSubmitted && q.rationale && (
+                                <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                                  <span className="font-bold text-emerald-700 dark:text-emerald-400 block">
+                                    التعليل الأكاديمي:
+                                  </span>
+                                  <p className="leading-relaxed font-normal">{q.rationale}</p>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Quiz Submit & Score Bar */}
+                      <div className="sticky bottom-6 z-30 p-4 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-xl flex items-center justify-between gap-4">
+                        <div className="text-xs">
+                          {quizSubmitted ? (
+                            <span className="font-bold text-slate-900 dark:text-white">
+                              النتيجة: {quizScore} من {activeCourse.quizQuestions.length} (
+                              {Math.round((quizScore / activeCourse.quizQuestions.length) * 100)}%)
+                            </span>
+                          ) : (
+                            <span className="text-slate-500 dark:text-slate-400">
+                              تمت الإجابة على {Object.keys(quizAnswers).length} من {activeCourse.quizQuestions.length}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {quizSubmitted ? (
+                            <button
+                              onClick={() => {
+                                setQuizSubmitted(false);
+                                setQuizAnswers({});
+                                setQuizScore(null);
+                              }}
+                              className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors"
+                            >
+                              إعادة المحاولة
+                            </button>
+                          ) : (
+                            <button
+                              onClick={handleQuizSubmit}
+                              disabled={Object.keys(quizAnswers).length === 0}
+                              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-xs font-bold shadow-sm transition-all"
+                            >
+                              اعتماد الإجابات ورؤية التقييم
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab: Flashcards */}
+                  {courseSubTab === 'flashcards' && activeCourse.flashcards && (
+                    <div className="space-y-6">
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            بطاقات الاستذكار السريع والتكرار المتباعد
+                          </h3>
+                          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            بطاقة {cardIdx + 1} من {activeCourse.flashcards.length}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">
+                          اضغط على البطاقة لقلبها واكتشاف التعريف والمفهوم الرياضي المخفي.
+                        </p>
+                      </div>
+
+                      {/* The Flip Card */}
+                      <div className="flex justify-center">
+                        <div
+                          onClick={() => {
+                            setIsFlipped(!isFlipped);
+                            playSound('cardFlip');
+                            unlockAchievement('cardMaster');
+                          }}
+                          className="w-full max-w-xl h-64 sm:h-72 rounded-3xl bg-white dark:bg-slate-800 border-2 border-dashed border-emerald-500/40 p-8 flex flex-col justify-between cursor-pointer hover:border-emerald-500 transition-all shadow-md text-center select-none"
+                        >
+                          <div className="flex items-center justify-between text-xs text-slate-400">
+                            <span>{isFlipped ? 'الإجابة والتفسير' : 'السؤال والمصطلح'}</span>
+                            <span className="font-mono text-[11px]">{cardIdx + 1} / {activeCourse.flashcards.length}</span>
+                          </div>
+
+                          <div className="my-auto space-y-2">
+                            <h4 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white leading-relaxed">
+                              {isFlipped
+                                ? activeCourse.flashcards[cardIdx].back
+                                : activeCourse.flashcards[cardIdx].front}
+                            </h4>
+                          </div>
+
+                          <div className="text-[11px] text-slate-400 font-medium">
+                            انقر في أي مكان للقلب
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Controls */}
+                      <div className="flex items-center justify-center gap-4">
+                        <button
+                          disabled={cardIdx === 0}
+                          onClick={() => {
+                            setCardIdx(cardIdx - 1);
+                            setIsFlipped(false);
+                          }}
+                          className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-30 text-slate-700 dark:text-slate-300 text-xs font-bold transition-colors"
+                        >
+                          ← البطاقة السابقة
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setIsFlipped(!isFlipped);
+                            playSound('cardFlip');
+                          }}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors shadow-sm"
+                        >
+                          قلب البطاقة
+                        </button>
+
+                        <button
+                          disabled={cardIdx === activeCourse.flashcards.length - 1}
+                          onClick={() => {
+                            setCardIdx(cardIdx + 1);
+                            setIsFlipped(false);
+                          }}
+                          className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-30 text-slate-700 dark:text-slate-300 text-xs font-bold transition-colors"
+                        >
+                          البطاقة التالية →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab: Free Courses */}
+                  {courseSubTab === 'courses' && activeCourse.onlineCourses && (
+                    <div className="space-y-6">
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            أفضل الكورسات المجانية المعتمدة عالمياً
+                          </h3>
+                          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            {activeCourse.onlineCourses.length} كورسات منتقاة
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">
+                          شروحات من كبرى الجامعات والمنصات (Coursera, MIT OCW, YouTube) لتثبيت الفهم العملي والنظري.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activeCourse.onlineCourses.map((crs, i) => (
+                          <div
+                            key={i}
+                            className="rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4 flex flex-col justify-between"
+                          >
+                            <div className="space-y-3">
+                              <div className="flex items-start justify-between gap-2">
+                                <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-500/20">
+                                  {crs.platform}
+                                </span>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                                  {crs.language}
+                                </span>
+                              </div>
+
+                              <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                                {crs.title}
+                              </h4>
+
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400 space-y-0.5">
+                                <div><strong className="text-slate-700 dark:text-slate-300">المحاضر:</strong> {crs.instructor}</div>
+                                <div><strong className="text-slate-700 dark:text-slate-300">المستوى:</strong> {crs.level} • {crs.duration}</div>
+                              </div>
+
+                              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                                {crs.desc}
+                              </p>
+                            </div>
+
+                            <a
+                              href={crs.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 border border-slate-200 dark:border-slate-700 mt-2"
+                            >
+                              <span>مشاهدة الكورس مجاناً</span>
+                              <span>↗</span>
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab: Exam Traps */}
+                  {courseSubTab === 'traps' && activeCourse.examTraps && (
+                    <div className="space-y-5">
+                      <div className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-6 space-y-2">
+                        <h3 className="text-base font-bold text-amber-900 dark:text-amber-300">
+                          فخاخ الامتحانات وأشهر الأخطاء الشائعة
+                        </h3>
+                        <p className="text-xs text-amber-800 dark:text-amber-200/90 leading-relaxed">
+                          مجموعة من النقاط الدقيقة التي يقع فيها معظم الطلاب في امتحانات الميدترم والفاينل، احرص على تدوينها ومراجعتها قبل الامتحان.
+                        </p>
+                      </div>
+
+                      <div className="space-y-3">
+                        {activeCourse.examTraps.map((trap, idx) => (
+                          <div
+                            key={idx}
+                            className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                                تنبيه امتحاني رقم {idx + 1}
+                              </h4>
+                            </div>
+                            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                              {trap}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sub-tab: Simplex Sandbox (OR) */}
+                  {courseSubTab === 'sandbox' && activeCourse.id === 'or' && (
+                    <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+                      <div className="space-y-2">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                          مختبر البرمجة الخطية التفاعلي (LP Simulator)
+                        </h3>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">
+                          مثال معمل الكراسي والمكاتب: دالة الربح Z = 50(X1) + 40(X2).
+                          قيد النجارة: 2(X1) + 4(X2) ≤ 100 ساعة.
+                          قيد الدهان: 3(X1) + 2(X2) ≤ 90 ساعة.
+                        </p>
+                      </div>
+
+                      {/* Sliders */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="font-bold text-slate-800 dark:text-slate-200">كمية إنتاج الكراسي (X1):</span>
+                            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">{lpX1} وحدة</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="50"
+                            value={lpX1}
+                            onChange={(e) => setLpX1(Number(e.target.value))}
+                            className="w-full accent-emerald-500 cursor-pointer"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="font-bold text-slate-800 dark:text-slate-200">كمية إنتاج المكاتب (X2):</span>
+                            <span className="font-mono font-bold text-teal-700 dark:text-teal-400">{lpX2} وحدة</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="50"
+                            value={lpX2}
+                            onChange={(e) => setLpX2(Number(e.target.value))}
+                            className="w-full accent-teal-500 cursor-pointer"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Calculations Output */}
+                      {(() => {
+                        const totalProfit = 50 * lpX1 + 40 * lpX2;
+                        const carpHours = 2 * lpX1 + 4 * lpX2;
+                        const paintHours = 3 * lpX1 + 2 * lpX2;
+                        const isCarpFeasible = carpHours <= 100;
+                        const isPaintFeasible = paintHours <= 90;
+                        const isFeasible = isCarpFeasible && isPaintFeasible;
+
+                        return (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-4 text-xs">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                                <span className="text-slate-500 dark:text-slate-400 block mb-1">الربح الإجمالي (Z):</span>
+                                <span className="text-lg font-bold font-mono text-emerald-700 dark:text-emerald-400">
+                                  ${totalProfit}
+                                </span>
+                              </div>
+
+                              <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                                <span className="text-slate-500 dark:text-slate-400 block mb-1">ساعات النجارة (≤ 100):</span>
+                                <span className={`font-mono font-bold text-sm ${isCarpFeasible ? 'text-slate-900 dark:text-slate-100' : 'text-rose-600'}`}>
+                                  {carpHours} / 100 س {isCarpFeasible ? '✓' : '(تجاوز!)'}
+                                </span>
+                              </div>
+
+                              <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                                <span className="text-slate-500 dark:text-slate-400 block mb-1">ساعات الدهان (≤ 90):</span>
+                                <span className={`font-mono font-bold text-sm ${isPaintFeasible ? 'text-slate-900 dark:text-slate-100' : 'text-rose-600'}`}>
+                                  {paintHours} / 90 س {isPaintFeasible ? '✓' : '(تجاوز!)'}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-slate-800 dark:text-slate-200">حالة الحل (Feasibility):</span>
+                              <span className={`px-2.5 py-1 rounded-md font-bold text-xs ${
+                                isFeasible
+                                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
+                                  : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                              }`}>
+                                {isFeasible ? 'حل مقبول ضمن منطقة الحلول الممكنة (Feasible Solution)' : 'حل غير مقبول يتعدى قيود الموارد (Infeasible)'}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
+                </div>
+              )
+            )}
+          </main>
+
+          {/* IN-APP DOCUMENT VIEWER MODAL */}
+          {viewerFile && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+              <div className="relative w-full max-w-5xl h-[92vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+                {/* Viewer Header */}
+                <div className="p-3 sm:p-4 bg-slate-100/90 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-md ${
+                      viewerFile.type === 'PDF'
+                        ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                        : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20'
+                    }`}>
+                      {viewerFile.type}
+                    </span>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                      {viewerFile.title}
+                    </h3>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">
+                      ({viewerFile.size})
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href={viewerFile.path}
+                      download={viewerFile.filename}
+                      className="px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+                    >
+                      تحميل 📥
+                    </a>
+                    <button
+                      onClick={() => openOnline(viewerFile)}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors"
+                    >
+                      نافذة كاملة ↗
+                    </button>
+                    <button
+                      onClick={() => setViewerFile(null)}
+                      className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                {/* Viewer Body */}
+                <div className="flex-1 bg-slate-100 dark:bg-slate-950 p-1 sm:p-2 overflow-hidden flex flex-col items-center justify-center">
+                  {window.location.protocol.startsWith('http') ? (
+                    <iframe
+                      src={getViewerUrl(viewerFile)}
+                      className="w-full h-full rounded-2xl border-0 bg-white"
+                      title={viewerFile.title}
+                    />
+                  ) : (
+                    <div className="max-w-md p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                      <div className="w-12 h-12 mx-auto rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+                        📄
+                      </div>
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                        {viewerFile.title}
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        الملف موجود محلياً في مجلد materials. عند نشر الموقع على جوجل (Firebase / Netlify / Web)، سيعمل عارض Google Docs تلقائياً داخل الصفحة!
+                      </p>
+                      <div className="flex items-center justify-center gap-2 pt-2">
+                        <a
+                          href={viewerFile.path}
+                          download={viewerFile.filename}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold"
+                        >
+                          تحميل الملف وفتحه الآن
+                        </a>
+                        <button
+                          onClick={() => window.open(viewerFile.path, '_blank')}
+                          className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold"
+                        >
+                          فتح في المتصفح
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* POMODORO TIMER MODAL */}
+          {showTimerModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+              <div className="relative w-full max-w-sm p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-5">
+                <button
+                  onClick={() => setShowTimerModal(false)}
+                  className="absolute top-4 left-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                >
+                  ✕
+                </button>
+
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">مؤقت بومودورو للتركيز</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">جلسة دراسية نقية (25 دقيقة) يعقبها 5 دقائق استراحة</p>
+                </div>
+
+                <div className="py-4">
+                  <span className="font-mono text-4xl sm:text-5xl font-black text-emerald-700 dark:text-emerald-400 tracking-wider">
+                    {formatTime(timerSeconds)}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => {
+                      setIsTimerRunning(!isTimerRunning);
+                      playSound('correct');
+                    }}
+                    className={`flex-1 py-2.5 rounded-xl font-bold text-xs transition-colors shadow-sm ${
+                      isTimerRunning
+                        ? 'bg-amber-600 hover:bg-amber-500 text-white'
+                        : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                    }`}
+                  >
+                    {isTimerRunning ? 'إيقاف مؤقت' : 'بدء التركيز'}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsTimerRunning(false);
+                      setTimerSeconds(25 * 60);
+                    }}
+                    className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors"
+                  >
+                    إعادة ضبط
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ACHIEVEMENTS MODAL */}
+          {showAchievements && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+              <div className="relative w-full max-w-md p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">سجل الأوسمة والإنجازات</h3>
+                  <button
+                    onClick={() => setShowAchievements(false)}
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  {[
+                    { id: 'firstQuiz', name: 'أول كويز', desc: 'إتمام أول اختبار', icon: '📝' },
+                    { id: 'perfectScore', name: 'العلامة الكاملة', desc: 'الحصول على 100% في كويز', icon: '💯' },
+                    { id: 'pomodoroMaster', name: 'بطل التركيز', desc: 'إنهاء جلسة بومودورو 25 دقيقة', icon: '⏱' },
+                    { id: 'cardMaster', name: 'ملك البطاقات', desc: 'مراجعة البطاقات الذكية', icon: '🗂' },
+                    { id: 'honorStudent', name: 'طالب متميز', desc: 'الوصول للمستوى 3 أو أعلى', icon: '🎓' },
+                    { id: 'aiInquirer', name: 'المستفسر الذكي', desc: 'استشارة المساعد في 3 أسئلة', icon: '🤖' }
+                  ].map((badge) => {
+                    const isUnlocked = achievements[badge.id];
+                    return (
+                      <div
+                        key={badge.id}
+                        className={`p-3.5 rounded-2xl border flex items-center gap-3 transition-all ${
+                          isUnlocked
+                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200'
+                            : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 text-slate-400 opacity-60'
+                        }`}
+                      >
+                        <span className="text-xl">{badge.icon}</span>
+                        <div>
+                          <h5 className="font-bold text-xs">{badge.name}</h5>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400">{badge.desc}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* FLOATING AI STUDY ASSISTANT */}
+          <div className="fixed bottom-6 left-6 z-40">
+            <button
+              onClick={() => {
+                setIsAiOpen(!isAiOpen);
+                unlockAchievement('aiInquirer');
+              }}
+              className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-xl shadow-emerald-600/30 hover:scale-105 transition-all"
+            >
+              <span>المساعد الذكي</span>
+            </button>
+          </div>
+
+          {/* AI CHAT DRAWER */}
+          {isAiOpen && (
+            <div className="fixed bottom-20 left-4 sm:left-6 z-40 w-[92vw] sm:w-96 h-[500px] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden animate-slideUp">
+              {/* Drawer Header */}
+              <div className="p-3.5 bg-slate-100/90 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">رفيق المذاكرة الذكي</h4>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">مقررات Level 2 Delta</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsAiOpen(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Messages Area */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+                {aiMessages.map(msg => (
+                  <div
+                    key={msg.id}
+                    className={`flex gap-2 ${msg.sender === 'user' ? 'justify-start flex-row-reverse' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-[85%] rounded-2xl p-3 leading-relaxed whitespace-pre-wrap ${
+                        msg.sender === 'user'
+                          ? 'bg-emerald-600 text-white font-semibold'
+                          : 'bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/60 text-slate-800 dark:text-slate-200'
+                      }`}
+                    >
+                      <p>{msg.text}</p>
+                      <span className="block text-[9px] mt-1 text-slate-400 font-mono text-left">{msg.time}</span>
+                    </div>
+                  </div>
+                ))}
+                {isAiThinking && (
+                  <div className="flex items-center gap-2 text-slate-400 text-xs py-1">
+                    <span className="animate-spin">⏳</span>
+                    <span>المساعد يفكر في الإجابة الأكاديمية...</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Input Area */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendAiMessage();
+                }}
+                className="p-2.5 bg-slate-50 dark:bg-slate-800/90 border-t border-slate-200 dark:border-slate-700/60 flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={aiInput}
+                  onChange={(e) => setAiInput(e.target.value)}
+                  placeholder="اكتب سؤالك وسيجيبك المساعد فوراً..."
+                  className="flex-1 py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-emerald-500 focus:outline-none text-xs text-slate-800 dark:text-white placeholder-slate-400"
+                />
+                <button
+                  type="submit"
+                  disabled={!aiInput.trim()}
+                  className="p-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-bold text-xs"
+                >
+                  إرسال
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* VISITOR WELCOME MODAL */}
+          {showNameModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+              <div className="relative w-full max-w-md p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 text-center">
+                <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                  ZD
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[11px] font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                    كلية الذكاء الاصطناعي • جامعة الدلتا
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">مرحباً بك في منصة زُبدة</h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    رفيق المذاكرة لمقررات المستوى الثاني بكلية الذكاء الاصطناعي
+                  </p>
+                </div>
+
+                <form onSubmit={handleSaveVisitorName} className="space-y-4 text-right">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                      اكتب اسمك لنرحب بك ونخصص لك تجربة المذاكرة:
+                    </label>
+                    <input
+                      type="text"
+                      autoFocus
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      placeholder="مثال: أحمد، سارة، محمود..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-emerald-500 focus:outline-none text-xs text-slate-900 dark:text-white placeholder-slate-400"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      type="submit"
+                      className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-sm"
+                    >
+                      ابدأ المذاكرة
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSkipName}
+                      className="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold"
+                    >
+                      دخول كضيف
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* FOOTER (THE ONLY SINGLE PLACE WITH CREATOR ATTRIBUTION) */}
+          <footer className="mt-16 py-8 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/60 text-xs text-slate-500 dark:text-slate-400 transition-colors">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <span className="text-slate-700 dark:text-slate-300 font-bold">منصة زُبدة التعليمية • جامعة الدلتا للعلوم والتكنولوجيا</span>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2 text-center sm:text-left">
+                <span>تصميم وتطوير:</span>
+                <span className="font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                  م/ محمد شعبان • كلية الذكاء الاصطناعي (Level 2)
+                </span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<PlatformCore />);
+  </script>
+</body>
+</html>
