@@ -88,8 +88,20 @@
     "icon": "📊",
     "readiness": 90,
     "files": [
-      "lecture 1.pptx.pptx",
-      "Section 1.pptx.pptx"
+      {
+        "title": "المحاضرة 1: مقدمة وصياغة البرمجة الخطية (LP Formulation)",
+        "filename": "lecture_1_intro.pptx",
+        "path": "./materials/or/lecture_1_intro.pptx",
+        "type": "PPTX",
+        "size": "0.28 MB"
+      },
+      {
+        "title": "السكشن 1: صياغة المسائل ومحددات الموارد والإنتاج",
+        "filename": "section_1_formulation.pptx",
+        "path": "./materials/or/section_1_formulation.pptx",
+        "type": "PPTX",
+        "size": "0.11 MB"
+      }
     ],
     "activeChapter": "الفصل 1 والشيت 1: LP Formulation, Graphical Method & Simplex Foundations",
     "status": "مكتمل وشامل",
@@ -343,8 +355,20 @@
     "icon": "🌐",
     "readiness": 88,
     "files": [
-      "Lec 1.pdf.pdf",
-      "sheet 1 .pdf.pdf"
+      {
+        "title": "المحاضرة 1: أساسيات ومعمارية الشبكات وطبقات OSI",
+        "filename": "networks_lec_1.pdf",
+        "path": "./materials/networks/networks_lec_1.pdf",
+        "type": "PDF",
+        "size": "1.87 MB"
+      },
+      {
+        "title": "الشيت 1: مسائل وتطبيقات الشبكات وحسابات التأخير",
+        "filename": "networks_sheet_1.pdf",
+        "path": "./materials/networks/networks_sheet_1.pdf",
+        "type": "PDF",
+        "size": "0.15 MB"
+      }
     ],
     "activeChapter": "المحاضرة 1 والشيت 1: Five Components, Transmission Modes & Network Topologies",
     "status": "مكتمل وشامل",
@@ -598,7 +622,13 @@
     "icon": "⛏️",
     "readiness": 85,
     "files": [
-      "01Intro.pdf.pptx.pptx.pptx"
+      {
+        "title": "المحاضرة 1: مقدمة تنقيب البيانات ودورة حياة KDD",
+        "filename": "data_mining_intro.pptx",
+        "path": "./materials/datamining/data_mining_intro.pptx",
+        "type": "PPTX",
+        "size": "0.84 MB"
+      }
     ],
     "activeChapter": "المحاضرة 1: Motivation, KDD Process, Architecture & Mining Tasks",
     "status": "مكتمل وشامل",
@@ -852,7 +882,13 @@
     "icon": "⚡",
     "readiness": 92,
     "files": [
-      "Sheet (1).pdf.pdf"
+      {
+        "title": "الشيت 1: أنظمة العد، البوابات المنطقية، وتبسيط خرائط كارنوف",
+        "filename": "digital_logics_sheet_1.pdf",
+        "path": "./materials/digitallogics/digital_logics_sheet_1.pdf",
+        "type": "PDF",
+        "size": "0.13 MB"
+      }
     ],
     "activeChapter": "الشيت 1: Number Systems, Boolean Algebra & Gate Minimization",
     "status": "مكتمل وشامل",
@@ -1106,7 +1142,13 @@
     "icon": "🤖",
     "readiness": 87,
     "files": [
-      "ML_L00.pdf.pdf"
+      {
+        "title": "المحاضرة 0: مقدمة وخارطة طريق خوارزميات تعلم الآلة",
+        "filename": "ml_lecture_0.pdf",
+        "path": "./materials/ml/ml_lecture_0.pdf",
+        "type": "PDF",
+        "size": "3.64 MB"
+      }
     ],
     "activeChapter": "المحاضرة التمهيدية 0: AI vs ML, Learning Paradigms & Core Challenges",
     "status": "مكتمل وشامل",
@@ -1374,8 +1416,11 @@
 
       const [currentView, setCurrentView] = useState('home');
       const [openedTabs, setOpenedTabs] = useState(['or', 'networks']);
-      const [courseSubTab, setCourseSubTab] = useState('summary');
+      const [courseSubTab, setCourseSubTab] = useState('files');
       const [searchQuery, setSearchQuery] = useState('');
+
+      // Document Viewer Modal State
+      const [viewerFile, setViewerFile] = useState(null);
 
       // Visitor & Profile
       const [visitorName, setVisitorName] = useState(() => {
@@ -1433,12 +1478,48 @@
         {
           id: 1,
           sender: 'bot',
-          text: 'أهلاً بك. أنا رفيقك الدراسي الذكي لكلية الذكاء الاصطناعي. كيف يمكنني إعانتك في مقررات اليوم؟ اختر من المواضيع المقترحة أو اطرح أي سؤال تريده.',
+          text: 'أهلاً بك. أنا رفيقك الأكاديمي الذكي لكلية الذكاء الاصطناعي. يمكنك فتح ملازم ومحاضرات المقررات أونلاين، أو سؤالي عن أي مسألة أو كويز وسأشرحها لك فوراً.',
           time: 'الآن'
         }
       ]);
 
       const [toastMessage, setToastMessage] = useState(null);
+
+      // Document URL Helpers for Online Viewing
+      const getViewerUrl = (file) => {
+        if (!file) return '';
+        try {
+          if (window.location.protocol.startsWith('http')) {
+            const absoluteUrl = new URL(file.path, window.location.href).href;
+            if (file.type === 'PDF') {
+              return absoluteUrl;
+            }
+            return `https://docs.google.com/viewer?url=${encodeURIComponent(absoluteUrl)}&embedded=true`;
+          }
+          return file.path;
+        } catch (e) {
+          return file.path;
+        }
+      };
+
+      const openOnline = (file) => {
+        if (!file) return;
+        try {
+          if (window.location.protocol.startsWith('http')) {
+            const absoluteUrl = new URL(file.path, window.location.href).href;
+            if (file.type === 'PDF') {
+              window.open(absoluteUrl, '_blank');
+            } else {
+              window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(absoluteUrl)}`, '_blank');
+            }
+          } else {
+            // Running offline locally
+            setViewerFile(file);
+          }
+        } catch(e) {
+          window.open(file.path, '_blank');
+        }
+      };
 
       // Sound Synthesizer (Pure Web Audio API - Zero External Files)
       const playSound = (type) => {
@@ -1554,7 +1635,7 @@
         triggerToast('مرحباً بك. يمكنك تعديل اسمك في أي وقت من أعلى الصفحة');
       };
 
-      const handleOpenCourse = (courseId, subTab = 'summary') => {
+      const handleOpenCourse = (courseId, subTab = 'files') => {
         if (!openedTabs.includes(courseId)) {
           setOpenedTabs([...openedTabs, courseId]);
         }
@@ -1593,11 +1674,20 @@
       const generateAiReply = (query, currentCourse) => {
         const q = query.toLowerCase();
 
+        if (q.includes('ملف') || q.includes('سلايد') || q.includes('محاضرة') || q.includes('شيت') || q.includes('تحميل')) {
+          if (currentCourse && currentCourse.files) {
+            return `الملفات والملازم المرفقة أونلاين لمقرر ${currentCourse.title}:
+${currentCourse.files.map((f, i) => `${i + 1}. [${f.type}] ${f.title} (${f.size})`).join('\n')}
+يمكنك النقر على زر "عرض أونلاين" لقراءة السلايدات والشيتات مباشرة في المتصفح دون الحاجة لتحميلها!`;
+          }
+          return `جميع ملفات المقررات (سلايدات وشيتات) متاحة للعرض المباشر أونلاين وتحميلها في تبويب "الملفات والملازم" داخل كل مادة.`;
+        }
+
         if (q.includes('سيمبلكس') || q.includes('simplex')) {
           return `خوارزمية السيمبلكس (Simplex Algorithm):
 1. الصورة القياسية (Standard Form): تحويل المتباينات (≤) إلى معادلات بإضافة متغيرات راكدة (Slack: S1, S2).
 2. جدول البداية (Initial Tableau): وضع المعاملات في الجدول، والحل المبدئي هو (X1=0, X2=0) مع بقاء متغيرات الـ Slack كأساس.
-3. عمود المحور (Pivot Column): اختيار المتغير صاحب القيمة الأكثر سلبية في صف Z (دالة الهدف) لتعظيم الربح.
+3. عمود المحور (Pivot Column): اختيار المتغير صاحب القيمة الأكثر سلبية في صف Z لتعظيم الربح.
 4. صف المحور (Pivot Row): قسمة عمود الثوابت (RHS) على عناصر عمود المحور الموجبة، واختيار أصغر نسبة موجبة لتحديد المتغير الخارج.
 5. العمليات الصفية البسيطة: جعل عنصر التقاطع 1 وباقي عناصر العمود أصفاراً، والتكرار حتى تختفي السوالب من صف Z.`;
         }
@@ -1661,29 +1751,11 @@
 5. أي متغير تتغير قيمته بين 0 و 1 داخل المجموعة نفسها يتم حذفه تلقائياً.`;
         }
 
-        if (q.includes('لخص') || q.includes('ملخص') || q.includes('أهم نقطة')) {
-          if (currentCourse) {
-            return `ملخص مركز لمقرر ${currentCourse.title}:
-الموضوع الأساسي: ${currentCourse.subtitle}
-أبرز نقاط الوحدة:
-${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).join('\n')}
-نصيحة: راجع فخاخ الامتحانات في تبويب المادة لتجنب الأخطاء الشائعة.`;
-          }
-          return `اختر أي مادة من التبويبات العلوية وسأقدم لك ملخصاً شاملاً لها فوراً.`;
-        }
-
-        if (q.includes('فخ') || q.includes('امتحان') || q.includes('خطأ')) {
-          if (currentCourse && currentCourse.examTraps?.length) {
-            return `أهم فخاخ الامتحانات لمقرر ${currentCourse.title}:\n\n` +
-              currentCourse.examTraps.map((trap, idx) => `• فخ ${idx + 1}: ${trap}`).join('\n\n');
-          }
-          return `افتح أي مادة وانتقل لقسم "فخاخ الامتحانات" للاطلاع على أهم التنبيهات.`;
-        }
-
         return `شكراً لسؤالك الأكاديمي.
 بصفتي المساعد الذكي لمقررات Level 2 بكلية الذكاء الاصطناعي، يمكنك سؤالي بالتفصيل عن:
+- فتح وتحميل ملازم وسلايدات المحاضرات والشيتات أونلاين.
 - طريقة صياغة نماذج البرمجة الخطية وحل السيمبلكس (OR).
-- طبقات الشبكات السبع (OSI) والفرق بين بروتوكولات TCP و UDP.
+- طبقات الشبكات السبع (OSI) وحسابات الـ Subnetting.
 - مراحل تنقيب البيانات وخوارزميات المعالجة المسبقة (Data Mining).
 - تبسيط خرائط كارنوف (K-Maps) والتصميم المنطقي (Digital Logic).
 - معالجة مشاكل Overfitting وتدريب نماذج تعلم الآلة (ML).`;
@@ -1908,7 +1980,7 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
                     </h1>
 
                     <p className="text-sm sm:text-base text-slate-100 leading-relaxed font-normal">
-                      مرجعك الجامعي الشامل لمقررات كلية الذكاء الاصطناعي بجامعة الدلتا. شروحات مبسطة ومركزة، بنك أسئلة امتحانية مع التفسير، بطاقات استذكار ذكية، ومختبرات تفاعلية.
+                      مرجعك الجامعي الشامل لمقررات كلية الذكاء الاصطناعي بجامعة الدلتا. جميع ملفات المحاضرات والشيتات الأصلية متوفرة للعرض المباشر أونلاين والتحميل السريع، مع شروحات مبسطة وبنك أسئلة امتحانية.
                     </p>
 
                     {/* Quick Stats Badges */}
@@ -1918,16 +1990,16 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
                         <span className="text-slate-200">مقررات تخصصية</span>
                       </div>
                       <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
-                        <span className="text-teal-300 font-bold">25</span>
+                        <span className="text-teal-300 font-bold">7</span>
+                        <span className="text-slate-200">ملازم وسلايدات أونلاين</span>
+                      </div>
+                      <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
+                        <span className="text-amber-300 font-bold">25</span>
                         <span className="text-slate-200">كورساً عالمياً مجانياً</span>
                       </div>
                       <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
-                        <span className="text-amber-300 font-bold">40</span>
+                        <span className="text-blue-300 font-bold">40</span>
                         <span className="text-slate-200">سؤال كويز مع التعليل</span>
-                      </div>
-                      <div className="px-3.5 py-2 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 flex items-center gap-2">
-                        <span className="text-blue-300 font-bold">{avgReadiness}%</span>
-                        <span className="text-slate-200">معدل الجاهزية</span>
                       </div>
                     </div>
                   </div>
@@ -1991,14 +2063,29 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
                           {c.subtitle}
                         </p>
 
-                        {/* Files & Readiness */}
+                        {/* Files Attached Preview */}
                         <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
                           <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                            <span>ملفات المقرر المرفقة:</span>
-                            <span className="text-slate-700 dark:text-slate-300 font-mono">{c.files.length} ملفات PPTX</span>
+                            <span>الملازم المرفقة أونلاين:</span>
+                            <span className="text-emerald-700 dark:text-emerald-400 font-semibold">{c.files.length} ملفات جاهزة</span>
                           </div>
 
-                          <div className="space-y-1">
+                          <div className="flex flex-wrap gap-1.5">
+                            {c.files.map((f, fi) => (
+                              <span
+                                key={fi}
+                                className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                                  f.type === 'PDF'
+                                    ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20'
+                                    : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20'
+                                }`}
+                              >
+                                {f.type}: {f.filename}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div className="space-y-1 pt-1">
                             <div className="flex justify-between text-[11px]">
                               <span className="text-slate-500 dark:text-slate-400 font-medium">مستوى الجاهزية والاستيعاب:</span>
                               <span className="font-bold text-emerald-700 dark:text-emerald-400">{c.readiness}%</span>
@@ -2016,10 +2103,10 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
                       {/* Action Buttons */}
                       <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-2">
                         <button
-                          onClick={() => handleOpenCourse(c.id, 'summary')}
+                          onClick={() => handleOpenCourse(c.id, 'files')}
                           className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm transition-all text-center"
                         >
-                          فتح المقرر
+                          الملازم والشرح
                         </button>
                         <button
                           onClick={() => handleOpenCourse(c.id, 'quiz')}
@@ -2097,22 +2184,42 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
                       {activeCourse.subtitle}
                     </p>
 
-                    {/* Files Attached Chips */}
+                    {/* Quick Access to Online Files */}
                     <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-                      <span className="text-slate-500 dark:text-slate-400 font-medium">ملفات المادة المتاحة:</span>
+                      <span className="text-slate-500 dark:text-slate-400 font-medium">الملفات والملازم الأصلية:</span>
                       {activeCourse.files.map((file, i) => (
-                        <span
+                        <button
                           key={i}
-                          className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono text-[11px]"
+                          onClick={() => openOnline(file)}
+                          className={`px-3 py-1.5 rounded-xl border text-[11px] font-semibold flex items-center gap-1.5 transition-all hover:scale-102 ${
+                            file.type === 'PDF'
+                              ? 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-500/30'
+                              : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30'
+                          }`}
+                          title="انقر لفتح الملف أونلاين"
                         >
-                          {file}
-                        </span>
+                          <span className="font-bold">[{file.type}]</span>
+                          <span>{file.title.split(':')[0]}</span>
+                          <span className="font-mono opacity-70">({file.size})</span>
+                          <span>↗</span>
+                        </button>
                       ))}
                     </div>
                   </div>
 
                   {/* Sub-tabs Navigation */}
                   <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-200/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar text-xs font-semibold">
+                    <button
+                      onClick={() => setCourseSubTab('files')}
+                      className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
+                        courseSubTab === 'files'
+                          ? 'bg-white text-emerald-800 dark:bg-slate-800 dark:text-emerald-400 shadow-sm border border-slate-200 dark:border-emerald-500/30'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                      }`}
+                    >
+                      الملفات والملازم الأصلية أونلاين ({activeCourse.files.length})
+                    </button>
+
                     <button
                       onClick={() => setCourseSubTab('summary')}
                       className={`px-4 py-2 rounded-xl whitespace-nowrap transition-all ${
@@ -2177,15 +2284,85 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
                             : 'text-teal-700 dark:text-teal-400 hover:bg-teal-500/10'
                         }`}
                       >
-                        مختبر السيمبلكس التفاعلي
+                        مختبر السيمبلكس
                       </button>
                     )}
                   </div>
 
+                  {/* Sub-tab: Official Course Files (Online Viewing & Downloading) */}
+                  {courseSubTab === 'files' && (
+                    <div className="space-y-6">
+                      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            الملازم وسلايدات المحاضرات الرسمية
+                          </h3>
+                          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            جاهزة للعرض أونلاين والتحميل المباشر
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          تم تضمين الملفات الأصلية بالكامل في حزمة الموقع. يمكنك فتحها مباشرة في المتصفح عبر عارض Google Docs / PDF دون الحاجة لتثبيت برامج Office، أو تحميلها بضغطة زر.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {activeCourse.files.map((file, idx) => (
+                          <div
+                            key={idx}
+                            className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4 flex flex-col justify-between hover:border-emerald-500/40 transition-all"
+                          >
+                            <div className="space-y-2.5">
+                              <div className="flex items-center justify-between">
+                                <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${
+                                  file.type === 'PDF'
+                                    ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                                    : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20'
+                                }`}>
+                                  {file.type}
+                                </span>
+                                <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                                  {file.size}
+                                </span>
+                              </div>
+
+                              <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                                {file.title}
+                              </h4>
+
+                              <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 break-all">
+                                {file.filename}
+                              </p>
+                            </div>
+
+                            <div className="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                              <button
+                                onClick={() => openOnline(file)}
+                                className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                              >
+                                <span>عرض أونلاين</span>
+                                <span>↗</span>
+                              </button>
+
+                              <a
+                                href={file.path}
+                                download={file.filename}
+                                className="py-2 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700"
+                                title="تحميل الملف على جهازك"
+                              >
+                                <span>تحميل</span>
+                                <span>📥</span>
+                              </a>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Sub-tab: Summary & Micro-Learning */}
                   {courseSubTab === 'summary' && (
                     <div className="space-y-6">
-                      {/* Chapter Overview */}
                       <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-3">
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
@@ -2669,6 +2846,92 @@ ${currentCourse.summaryPoints.map((p, i) => `${i + 1}. ${p.title}: ${p.desc}`).j
               )
             )}
           </main>
+
+          {/* IN-APP DOCUMENT VIEWER MODAL */}
+          {viewerFile && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+              <div className="relative w-full max-w-5xl h-[92vh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+                {/* Viewer Header */}
+                <div className="p-3 sm:p-4 bg-slate-100/90 dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-md ${
+                      viewerFile.type === 'PDF'
+                        ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                        : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20'
+                    }`}>
+                      {viewerFile.type}
+                    </span>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                      {viewerFile.title}
+                    </h3>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">
+                      ({viewerFile.size})
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href={viewerFile.path}
+                      download={viewerFile.filename}
+                      className="px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+                    >
+                      تحميل 📥
+                    </a>
+                    <button
+                      onClick={() => openOnline(viewerFile)}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors"
+                    >
+                      نافذة كاملة ↗
+                    </button>
+                    <button
+                      onClick={() => setViewerFile(null)}
+                      className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                {/* Viewer Body */}
+                <div className="flex-1 bg-slate-100 dark:bg-slate-950 p-1 sm:p-2 overflow-hidden flex flex-col items-center justify-center">
+                  {window.location.protocol.startsWith('http') ? (
+                    <iframe
+                      src={getViewerUrl(viewerFile)}
+                      className="w-full h-full rounded-2xl border-0 bg-white"
+                      title={viewerFile.title}
+                    />
+                  ) : (
+                    <div className="max-w-md p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                      <div className="w-12 h-12 mx-auto rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+                        📄
+                      </div>
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                        {viewerFile.title}
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        الملف موجود محلياً في مجلد materials. عند نشر الموقع على جوجل (Firebase / Netlify / Web)، سيعمل عارض Google Docs تلقائياً داخل الصفحة!
+                      </p>
+                      <div className="flex items-center justify-center gap-2 pt-2">
+                        <a
+                          href={viewerFile.path}
+                          download={viewerFile.filename}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold"
+                        >
+                          تحميل الملف وفتحه الآن
+                        </a>
+                        <button
+                          onClick={() => window.open(viewerFile.path, '_blank')}
+                          className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold"
+                        >
+                          فتح في المتصفح
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* POMODORO TIMER MODAL */}
           {showTimerModal && (
